@@ -154,3 +154,9 @@ body {
 .hidden {
     display: none !important;
 }
+
+.logo {
+    font-family: "Do Hyeon", sans-serif;
+    font-weight: 400; /* 도현체는 단일 굵기(400)만 지원합니다 */
+    font-size: 48px;
+}
