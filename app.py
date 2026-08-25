@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-from routes.posts import posts_bp
+from routes.posts_routes import posts_bp
 from routes.auth_routes import auth_bp
 
 app = Flask(__name__)

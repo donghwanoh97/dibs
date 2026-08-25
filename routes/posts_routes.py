@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 posts_bp = Blueprint('posts', __name__, template_folder = 'templates')
 
 client = MongoClient('localhost', 27017)
-db = client.dibs
+from database import db 
 
 db.posts.insert_one({'title': '저녁에 햄버거 같이 드실 분', 'date': '2026-09-01', 'time': '18:00', 'joined_users' : [1, 2], 'max_count': 4, 'author': 1, 'category' : '식사', 'content': '햄버거 같이 드실 분 구합니다. 버거킹 좋아하시는 분 환영.'})
 
