@@ -1,0 +1,118 @@
+/* 전체 기본 스타일 초기화 */
+* {
+    font-family:'Noto Sans KR', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;}
+
+/* 페이지 전체 배경 및 중앙 정렬 */
+body {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 회원가입 전체 레이아웃 틀*/
+.signup-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+/* 상단 타이틀(Dibs!) */
+.signup-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* 메인 회원가입 카드 */
+.signup-card {
+    background-color: #05D082;
+    color: #ffffff;
+    width: 100%;
+    padding: 40px 30px;
+    border-radius: 8px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+}
+
+/* 프로필 이미지 영역 */
+.profile-img-wrap {
+    width: 80px;
+    height: 80px;
+    background-color: #cccccc;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+/* 입력 행 구성 요소 */
+.form-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+.form-label {
+    width: 85px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0;
+    white-space: nowrap;
+    flex-shrink: 0l
+}
+
+/* 입력 필드 */
+.form-input {
+    flex: 1;
+    min-width: 0;
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background-color: #ffffff;
+    color: #000000;
+}
+.input-with-btn {
+    /* 입력창과 우측 버튼 사이 간격 확보 */
+    margin-right: 8px;
+}
+
+/* 버튼 스타일 */
+.btn-sub {
+    height: 36px;
+    width: 70px;
+    padding: 0 12px;
+    background-color: #CCCCCC;
+    color: #000000;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap; 
+    flex-shrink: 0;
+}
+.btn-submit {
+    margin-top: 24px;
+    width: 120px;
+    height: 40px;
+    background-color: #cccccc;
+    color: #000000;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-sub:hover,
+.btn-submit:hover {
+    /* 버튼 호버 효과 */
+    background-color: #888888;
+}
