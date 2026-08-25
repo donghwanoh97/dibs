@@ -82,7 +82,7 @@ body {
     background-color: #ffffff;
     color: #000000;
 }
-.input-with-btn {
+.input-width-btn {
     /* 입력창과 우측 버튼 사이 간격 확보 */
     margin-right: 8px;
 }
@@ -128,6 +128,12 @@ body {
     font-size: 14px;
     font-weight: bold;
     color: #ffffff;
+    text-decoration: none;
+}
+
+/* 마우스 올렸을 때 텍스트에만 밑줄 표시 */
+.find-info a:hover {
+    text-decoration: underline;
 }
 
 .find-info a + a::before {
