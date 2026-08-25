@@ -20,7 +20,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     padding: 20px;
 }
 
@@ -61,16 +61,19 @@ body {
     margin-bottom: 16px;
 }
 .form-label {
-    width: 80px;
-    font-size: 16px;
+    width: 85px;
+    font-size: 15px;
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 0;
+    white-space: nowrap;
+    flex-shrink: 0l
 }
 
 /* 입력 필드 */
 .form-input {
     flex: 1;
+    min-width: 0;
     height: 36px;
     padding: 0 10px;
     border: none;
@@ -86,6 +89,7 @@ body {
 /* 버튼 스타일 */
 .btn-sub {
     height: 36px;
+    width: 70px;
     padding: 0 12px;
     background-color: #CCCCCC;
     color: #000000;
@@ -94,6 +98,7 @@ body {
     font-size: 14px;
     cursor: pointer;
     white-space: nowrap; 
+    flex-shrink: 0;
 }
 .btn-submit {
     margin-top: 24px;
