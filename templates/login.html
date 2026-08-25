@@ -9,9 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-        <!-- Flask 서버 실행(실제 백엔드 연동)시 다음으로 변경 -->
-         <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}"> -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
         <div class="signup-wrap">
@@ -20,20 +18,20 @@
 
                 <!-- 1. 이메일 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">이메일: </label>
-                    <input type="text" id="user-name" class="form-input input-width-btn">
+                    <label class="form-label" for="userID">이메일: </label>
+                    <input type="text" id="userID" class="form-input">
                 </div>
 
                 <!-- 2. PW -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">PW: </label>
-                    <input type="password" id="user-name" class="form-input">
+                    <label class="form-label" for="userPassword">PW: </label>
+                    <input type="password" id="userPassword" class="form-input">
                 </div>
 
-                <button type="submit" class="btn-submit">로그인</button>
+                <button type="button" class="btn-submit" onclick="login()">로그인</button>
 
                 <div class="find-info">
-                    <a href="/register">회원가입</a>
+                    <a href="/auth/sign-up">회원가입</a>
                     <a href="/find-id">ID 찾기</a>
                     <a href="/find-pw">PW 찾기</a>
                 </div>

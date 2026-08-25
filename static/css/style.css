@@ -82,7 +82,7 @@ body {
     background-color: #ffffff;
     color: #000000;
 }
-.input-with-btn {
+.input-width-btn {
     /* 입력창과 우측 버튼 사이 간격 확보 */
     margin-right: 8px;
 }
