@@ -59,15 +59,16 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 16px;
+    gap: 12px;
 }
 .form-label {
-    width: 85px;
+    width: 120px;
     font-size: 15px;
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 0;
     white-space: nowrap;
-    flex-shrink: 0l
+    flex-shrink: 0;
 }
 
 /* 입력 필드 */
@@ -115,4 +116,47 @@ body {
 .btn-submit:hover {
     /* 버튼 호버 효과 */
     background-color: #888888;
+}
+
+/* 회원가입, ID 찾기, PW 찾기 */
+.find-info {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.find-info a{
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.find-info a + a::before {
+    content: "ㅣ";
+    margin: 0 8px;
+    color: #ffffff;
+    display: inline-block;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+/* 당신의 아이디: */
+.your-id {
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-top: 8px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+/* 요소 숨김 클래스 */
+.hidden {
+    display: none !important;
+}
+
+.logo {
+    font-family: "Do Hyeon", sans-serif;
+    font-weight: 400; /* 도현체는 단일 굵기(400)만 지원합니다 */
+    font-size: 48px;
 }

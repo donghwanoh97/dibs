@@ -22,22 +22,23 @@
                 <div class="form-row">
                     <label class="form-label" for="user-name">이메일: </label>
                     <input type="text" id="user-name" class="form-input input-width-btn">
+                    <button type="button" class="btn-sub">보내기</button>
                 </div>
 
-                <!-- 2. PW -->
+                <!-- 2. 인증번호 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">PW: </label>
-                    <input type="password" id="user-name" class="form-input">
+                    <label class="form-label" for="user-name">인증번호: </label>
+                    <input type="text" id="user-name" class="form-input">
+                    <button id="verify-btn" type="button" class="btn-sub">인증</button>
                 </div>
 
-                <button type="submit" class="btn-submit">로그인</button>
-
-                <div class="find-info">
-                    <a href="/register">회원가입</a>
-                    <a href="/find-id">ID 찾기</a>
-                    <a href="/find-pw">PW 찾기</a>
-                </div>
+                <!-- 3. 당신의 ID -->
+                <p id="result-id" class="your-id hidden">당신의 ID: asdf</p>
             </div>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <script src="../static/js/main.js"></script>
     </body>
 </html>
