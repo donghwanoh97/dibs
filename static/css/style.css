@@ -128,6 +128,12 @@ body {
     font-size: 14px;
     font-weight: bold;
     color: #ffffff;
+    text-decoration: none;
+}
+
+/* 마우스 올렸을 때 텍스트에만 밑줄 표시 */
+.find-info a:hover {
+    text-decoration: underline;
 }
 
 .find-info a + a::before {
@@ -137,6 +143,7 @@ body {
     display: inline-block;
     text-decoration: none;
     pointer-events: none;
+    pointer-events:
 }
 
 /* 당신의 아이디: */
