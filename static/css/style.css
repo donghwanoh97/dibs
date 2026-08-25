@@ -45,7 +45,7 @@ body {
 }
 
 /* 프로필 이미지 영역 */
-.profile-image-wrap {
+.profile-img-wrap {
     width: 80px;
     height: 80px;
     background-color: #cccccc;
@@ -54,3 +54,60 @@ body {
 }
 
 /* 입력 행 구성 요소 */
+.form-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+.form-label {
+    width: 80px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0;
+}
+
+/* 입력 필드 */
+.form-input {
+    flex: 1;
+    height: 36px;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background-color: #ffffff;
+    color: #000000;
+}
+.input-with-btn {
+    /* 입력창과 우측 버튼 사이 간격 확보 */
+    margin-right: 8px;
+}
+
+/* 버튼 스타일 */
+.btn-sub {
+    height: 36px;
+    padding: 0 12px;
+    background-color: #CCCCCC;
+    color: #000000;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap; 
+}
+.btn-submit {
+    margin-top: 24px;
+    width: 120px;
+    height: 40px;
+    background-color: #cccccc;
+    color: #000000;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-sub:hover,
+.btn-submit:hover {
+    /* 버튼 호버 효과 */
+    background-color: #888888;
+}
