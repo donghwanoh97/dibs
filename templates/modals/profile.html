@@ -1,0 +1,35 @@
+<div class="modal-backdrop" id="profile-modal-backdrop" onclick="document.getElementById('profile-modal-backdrop').remove()">
+  <dialog class="custom-modal" id="profile-modal" open onclick="event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">프로필 정보</h2>
+        <button class="modal-close-btn" type="button" onclick="document.getElementById('profile-modal-backdrop').remove()">&times;</button>
+      </div>
+      
+      <form hx-patch="/posts/update-nickname" 
+            class="modal-body">
+        
+        <div class="mb-3 row align-items-center">
+          <label for="user_nickname" class="col-3 col-form-label"><strong>닉네임</strong></label>
+          <div class="col-9">
+            <input type="text" class="form-control" id="user_nickname" name="user_nickname" value="{{ user.user_nickname }}" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row">
+          <span class="col-3"><strong>이름</strong></span>
+          <div class="col-9 py-1">{{ user.user_name }}</div>
+        </div>
+
+        <div class="mb-3 row">
+          <span class="col-3"><strong>이메일</strong></span>
+          <div class="col-9 py-1">{{ user.user_id }}</div>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="submit" class="btn btn-dark">변경하기</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+</div>

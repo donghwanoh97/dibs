@@ -94,7 +94,14 @@
           <div class="top-bar">
             <a class="logo" href="/">DIBS!</a>
             <div class="user-menu">
-              <button class="btn-sub">사용자1님</span>
+              <button 
+                class="btn-sub"
+                hx-get="/posts/profile-modal"
+                hx-target="#profile-modal-container"
+                hx-swap="innerHTML"
+              >
+                사용자1님
+              </button>
               <button class="btn-sub" onclick="logout()">로그아웃</button>
             </div>
           </div>
@@ -141,6 +148,7 @@
       </div>
 
       <div id="post-detail-modal-container"></div>
+      <div id="profile-modal-container"></div>
 
       <script>
         function logout() {
