@@ -31,9 +31,9 @@
                 <button type="button" class="btn-submit" onclick="login()">로그인</button>
 
                 <div class="find-info">
-                    <a href="/auth/sign-up">회원가입</a>
-                    <a href="/auth/find-id">ID 찾기</a>
-                    <a href="/auth/find-pw">PW 찾기</a>
+                    <a href="{{ url_for('auth.get_signup_page') }}">회원가입</a>
+                    <a href="{{ url_for('auth.get_find_id_page') }}">ID 찾기</a>
+                    <a href="{{ url_for('auth.get_find_pw_page') }}">PW 찾기</a>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/auth/api/login',
+                    url: '/auth/login',
                     data: {
                         user_id: userId,
                         password: userPassword

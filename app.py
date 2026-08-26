@@ -4,11 +4,7 @@ from routes.auth_routes import auth_bp
 
 app = Flask(__name__)
 app.register_blueprint(meetings_bp, url_prefix='/meetings')
-app.register_blueprint(auth_bp, url_prefix='/auth')
-
-@app.route('/')
-def index():
-  return redirect(url_for('meetings.get_meetings'))
+app.register_blueprint(auth_bp)
 
 if __name__ == '__main__':
   app.run('0.0.0.0', port=5001, debug=True)
