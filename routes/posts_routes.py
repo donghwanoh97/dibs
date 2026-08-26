@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request, jsonify
+from flask import Blueprint, render_template, abort, request, redirect, url_for, make_response
 from bson import ObjectId
 from jinja2 import TemplateNotFound
 from pymongo import MongoClient
@@ -37,8 +37,13 @@ FILTER_CATEGORIES = {
 @posts_bp.route('/')
 def get_posts():
   user_payload = verify_token()
-  user_id = user_payload['user_id'] if user_payload else None
-  
+
+  if not user_payload:
+    response = make_response(redirect(url_for('auth.get_login_page')))
+    response.delete_cookie('access_token', path='/')
+    return response
+
+  user_id = user_payload['user_id']
   selected_category = request.args.get('category', 'all')
 
   if selected_category == 'all':
@@ -46,7 +51,7 @@ def get_posts():
   else:
     posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
 
-  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES)
+  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES, user_id=user_id)
 
 @posts_bp.route('/', methods=['POST'])
 def post_meeting():
