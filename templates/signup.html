@@ -94,6 +94,16 @@
                     return;
                 }
 
+                // 비밀번호 유효성 검사 (최소 8자 이상, 영문 + 숫자)
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+                if (!passwordRegex.test(userPassword)) {
+                    alert('비밀번호는 영문과 숫자를 포함하여 8자리 이상이어야 합니다.');
+                    $('#userPassword').focus();
+
+                    return;
+                }
+
                 if (userPassword !== userPasswordConfirm) {
                     alert('비밀번호가 일치하지 않습니다.');
                     $('#userPasswordConfirm').focus();

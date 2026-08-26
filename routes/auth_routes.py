@@ -97,6 +97,10 @@ def signup():
     user_id = request.form.get('user_id')
     raw_password = request.form.get('password')
 
+    # 필수값 체크
+    if not all([user_name, user_nickname, user_id, raw_password]):
+        return jsonify({'result': 'fail', 'msg': '비밀번호는 영문과 숫자를 포함하여 8자리 이상이어야 합니다.'})
+    
     # 아이디 중복 체크
     if db.users.find_one({'user_id': user_id}):
         return jsonify({'result': 'fail', 'msg': '이미 존재하는 아이디입니다.'})
