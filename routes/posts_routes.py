@@ -142,9 +142,10 @@ def edit_post(post_id):
 
   return render_template('post_card.html', post=updated_post, categories=CATEGORIES)
 
-@posts_bp.route('/update-nickname', methods=['PATCH'])
+@posts_bp.route('/posts/update-nickname', methods=['PATCH'])
 def update_nickname():
     new_nickname = request.form.get('user_nickname')
+    user_payload = verify_token()
 
     user_payload = verify_token()
     if not user_payload:

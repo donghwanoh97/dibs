@@ -33,3 +33,38 @@
     </div>
   </dialog>
 </div>
+
+<script>
+async function updateNickname(event) {
+  event.preventDefault(); // 기본 폼 제출(새로고침) 막기
+  
+  const form = event.target;
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch('/posts/update-nickname', {
+      method: 'PATCH',
+      body: formData
+    });
+
+    if (response.ok) {
+      alert('닉네임이 성공적으로 변경되었습니다!');
+      
+      // 모달 닫기
+      const modalBackdrop = document.getElementById('profile-modal-backdrop');
+      if (modalBackdrop) {
+        modalBackdrop.remove();
+      }
+      
+      // 변경된 닉네임 반영을 위해 페이지 새로고침
+      location.reload();
+    } else {
+      const errorText = await response.text();
+      alert('변경 실패: ' + errorText);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('오류가 발생했습니다.');
+  }
+}
+</script>
