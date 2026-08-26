@@ -142,15 +142,17 @@ def edit_post(post_id):
 
   return render_template('post_card.html', post=updated_post, categories=CATEGORIES)
 
-@posts_bp.route('/update-nickname', methods=['PATCH'])
+@posts_bp.route('/posts/update-nickname', methods=['PATCH'])
 def update_nickname():
     new_nickname = request.form.get('user_nickname')
+    user_payload = verify_token()
 
-    print(user_id, new_nickname)
-    response = db.users.update_one(
-        {'user_id': user_id},
+    if not user_payload:
+        return "로그인이 필요합니다.", 401
+    
+    db.users.update_one(
+        {'user_id': user_payload['user_id']},
         {'$set': {'user_nickname': new_nickname}}
     )
 
-
-    return "", 200
+    return "성공", 200

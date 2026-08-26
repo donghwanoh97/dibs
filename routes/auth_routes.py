@@ -177,3 +177,11 @@ def rename_password_api():
     db.users.update_one({'user_id': user_id}, {'$set': {'password': hashed_password}})
 
     return jsonify({'result': 'success', 'msg': '비밀번호가 성공적으로 변경되었습니다.'})
+
+# 로그아웃
+@auth_bp.route('/api/log-out', methods=['POST'])
+def logout():
+    response = make_response(jsonify({'result': 'success', 'msg': '로그아웃 되었습니다.'}))
+    # 쿠키의 만료 시간을 0으로 줘서 삭제
+    response.set_cookie('access_token', '', expires=0, path='/')
+    return response
