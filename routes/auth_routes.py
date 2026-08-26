@@ -30,6 +30,13 @@ def get_login_page():
 def get_signup_page():
     return render_template('signup.html')
 
+# 3. ID 찾기 페이지 렌더링(GET)
+# 사용자가 접속(GET)하면 ID 찾기 페이지를 브라우저에 렌더링
+@auth_bp.route('/find-id', methods=['GET'])
+def get_find_id_page():
+    return render_template('find_id.html')
+
+
 # 3. 로그인 처리(POST) - JWT 발급 및 쿠키 저장
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
@@ -78,6 +85,8 @@ def login():
 @auth_bp.route('/api/sign-up', methods=['POST'])
 def signup():
     # 사용자가 입력한 id와 password를 변수에 저장
+    user_name = request.form.get('user_name')
+    user_nickname = request.form.get('user_nickname')
     user_id = request.form.get('user_id')
     raw_password = request.form.get('password')
 
@@ -90,11 +99,45 @@ def signup():
     hashed_password = generate_password_hash(raw_password)
 
     # MongoDB 'users' 컬렉션에 회원 정보(user_id, hashed_password) 저장
-    db.users.insert_one({'user_id': user_id, 'password': hashed_password})
+    db.users.insert_one({
+        'user_name': user_name, 
+        'user_nickname': user_nickname, 
+        'user_id': user_id, 
+        'password': hashed_password
+    })
 
     return jsonify({'result': 'success', 'msg': '회원가입이 완료되었습니다.'})
 
-# 5. 로그아웃 처리 (POST)
+# 5. ID 찾기 처리 (POST) -> 동명이인 대응 방법 (이름 + 닉네임 조회)
+@auth_bp.route('/api/find-id', methods=['POST'])
+def find_id():
+    # 이름, 닉네임 저장
+    user_name = request.form.get('user_name')
+    user_nickname = request.form.get('user_nickname')
+
+    # 만약에 이름을 입력하지 않았거나, 닉네임을 입력하지 않았다면
+    if not user_name or not user_nickname:
+        # 실패 메시지를 보내고 함수 종료
+        return jsonify({'result': 'fail', 'msg': '이름과 닉네임을 모두 입력해 주세요.'})
+
+    # 이름과 닉네임 동시 검증
+    # DB의 users 목록에서 name과 nickname이 입력받은 값과 일치하는 사용자 1명을 찾아 저장
+    user = db.users.find_one({
+        'user_name': user_name,
+        'user_nickname': user_nickname
+    })
+
+    # 만약 일치하는 사용자 정보를 찾았다면
+    if user:
+        # 성공 메시지를 보내고 user_id를 보여준다.
+        return jsonify({'result': 'success', 'user_id': user['user_id']})
+    
+    # 찾지 못했다면
+    else:
+        # 실패 메시지를 보낸다.
+        return jsonify({'result': 'fail', 'msg': '일치하는 회원 정보를 찾을 수 없습니다.'})
+
+# 6. 로그아웃 처리 (POST)
 @auth_bp.route('/api/log-out', methods=['POST'])
 def logout():
     # 응답 객체를 만들어 기존에 발급한 access_token 쿠키 삭제
