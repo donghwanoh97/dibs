@@ -1,0 +1,29 @@
+<div class="modal-backdrop" id="write-modal-backdrop" onclick="document.getElementById('write-modal-backdrop').remove()">
+  <dialog class="custom-modal post-detail" id="write-modal" open onclick="event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">{{post.title}}</h2>
+        <button class="modal-close-btn" type="button" onclick="document.getElementById('write-modal-backdrop').remove()">&times;</button>
+      </div>
+      
+      <form hx-post="/posts" hx-target="#card-list" hx-swap="afterbegin" hx-on::after-request="document.getElementById('write-modal-backdrop').remove()">
+        <div class="modal-body">
+          <p>날짜 : {{post.date}}</p>
+          <p>시간 : {{post.time}}</p>
+          <p>참여인원 : {{post.joined_users | length}} / {{post.max_count}}</p>
+          <p>작성자 : {{post.author}}</p>
+          <p>참여자 : {{post.joined_users}}</p>
+          <p>내용 : {{post.content}}</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">참여하기</button>
+        </div>
+        <div class="modal-footer">
+          <button hx-get="/posts/{{post._id}}/edit" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
+          <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+</div>

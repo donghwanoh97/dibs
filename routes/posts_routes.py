@@ -1,0 +1,97 @@
+from flask import Blueprint, render_template, abort, request
+from bson import ObjectId
+from jinja2 import TemplateNotFound
+from pymongo import MongoClient
+from datetime import datetime, timezone
+
+posts_bp = Blueprint('posts', __name__, template_folder = 'templates')
+
+client = MongoClient('localhost', 27017)
+from database import db 
+
+@posts_bp.route('/')
+def get_posts():
+  selected_category = request.args.get('category', '전체')
+
+  if selected_category == '전체':
+    posts = list(db.posts.find({}).sort('created_at', -1))
+  else:
+    posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
+
+  return render_template('posts.html', posts=posts, current_category=selected_category)
+
+
+@posts_bp.route('/', methods=['POST'])
+def post_meeting():
+  title_receive = request.form['title']
+  date_receive = request.form['date']
+  time_receive = request.form['time']
+  max_count_receive = request.form['max_count']
+  content_receive = request.form['content']
+
+  new_post = {
+        'title': title_receive,
+        'date': date_receive,
+        'time': time_receive,
+        'max_count': max_count_receive,
+        'category': '공부',
+        'content': content_receive,
+        'author': '김철수',
+        'joined_users': [1, 2],
+        'created_at': datetime.now(timezone.utc) 
+    }
+  
+  db.posts.insert_one(new_post)
+
+  return render_template('post_card.html', post=new_post)
+
+@posts_bp.route('/new-modal')
+def get_create_post_modal():
+  categories = ['공부', '식사']
+  return render_template('modals/create_post.html', categories=categories)
+
+  
+@posts_bp.route('/<post_id>/detail-modal')
+def get_post_detail_modal(post_id):
+  
+  post = db.posts.find_one({'_id': ObjectId(post_id)})
+  print(post_id)
+  if not post:
+    return "게시글을 찾을 수 없습니다.", 404
+  return render_template('modals/post_detail.html', post=post)
+  
+@posts_bp.route('/<post_id>', methods=['DELETE'])
+def delete_post(post_id):
+  db.posts.delete_one({'_id': ObjectId(post_id)})
+  return "", 200
+
+@posts_bp.route('/<post_id>/edit')
+def get_edit_form(post_id):
+  categories = ['식사', '공부']
+  post = db.posts.find_one({'_id': ObjectId(post_id)})
+  return render_template('/modals/post_edit_form.html', post=post, categories=categories)
+
+@posts_bp.route('/<post_id>', methods=['PATCH'])
+def edit_post(post_id):
+  title_receive = request.form['title']
+  date_receive = request.form['date']
+  time_receive = request.form['time']
+  max_count_receive = request.form['max_count']
+  content_receive = request.form['content']
+  category_receive = request.form.get('category')
+  
+  db.posts.update_one(
+    {'_id': ObjectId(post_id)},
+    {'$set': {
+        'title': title_receive,
+        'date': date_receive,
+        'time': time_receive,
+        'max_count': max_count_receive,
+        'category': category_receive,
+        'content': content_receive
+    }}
+  )
+
+  updated_post = db.posts.find_one({'_id': ObjectId(post_id)})
+
+  return render_template('post_card.html', post=updated_post)
