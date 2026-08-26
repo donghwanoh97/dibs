@@ -1,0 +1,40 @@
+<div class="modal-backdrop" id="write-modal-backdrop" onclick="document.getElementById('write-modal-backdrop').remove()">
+  <dialog class="custom-modal" id="write-modal" open onclick="event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">모임 수정</h2>
+        <button class="modal-close-btn" type="button" onclick="document.getElementById('write-modal-backdrop').remove()">&times;</button>
+      </div>
+      
+      <!-- 수정 완료 시 #post-card-{{post._id}} 영역만 갱신 후 모달 닫기 -->
+      <form hx-patch="/posts/{{post._id}}" 
+            hx-target="#post-card-{{post._id}}" 
+            hx-swap="outerHTML" 
+            hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
+            hx-confirm="정말 수정하겠습니까?"
+            >
+        
+        <div class="modal-body">
+          <select name="category">
+          {% for category in categories %}
+            <option value="{{category}}" {% if category == post.category %}selected{% endif %}>{{category}}</option>
+          {% endfor %}
+          </select>
+
+          <input type="text" name="title" value="{{post.title}}" placeholder="제목을 입력하세요" required>
+          <input type="date" name="date" value="{{post.date}}" required>
+          <input type="time" name="time" value="{{post.time}}" required>
+          <input type="number" name="max_count" value="{{post.max_count}}" placeholder="참여인원을 입력하세요" required>
+
+          <label for="content">내용</label>
+          <textarea id="content" name="content" rows="4" placeholder="내용을 입력하세요">{{post.content}}</textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-secondary" ">취소</button>
+          <button type="submit" class="btn btn-primary">수정하기</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+</div>
