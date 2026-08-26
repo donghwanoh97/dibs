@@ -91,7 +91,8 @@ def delete_post(post_id):
 @posts_bp.route('/<post_id>/edit')
 def get_edit_form(post_id):
   post = db.posts.find_one({'_id': ObjectId(post_id)})
-  return render_template('/modals/post_edit_form.html', post=post, categories=CATEGORIES)
+  curent_category = request.args.get('current_category', 'all')
+  return render_template('/modals/post_edit_form.html', post=post, categories=CATEGORIES, curent_category=curent_category)
 
 @posts_bp.route('/<post_id>', methods=['PATCH'])
 def edit_post(post_id):
@@ -101,7 +102,9 @@ def edit_post(post_id):
   max_count_receive = request.form['max_count']
   content_receive = request.form['content']
   category_receive = request.form.get('category')
-  
+
+  current_category = request.args.get('current_category', 'all')
+
   db.posts.update_one(
     {'_id': ObjectId(post_id)},
     {'$set': {
@@ -115,5 +118,8 @@ def edit_post(post_id):
   )
 
   updated_post = db.posts.find_one({'_id': ObjectId(post_id)})
+
+  if current_category != 'all' and updated_post['category'] != current_category:
+    return "", 200
 
   return render_template('post_card.html', post=updated_post, categories=CATEGORIES)

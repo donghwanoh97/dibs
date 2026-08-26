@@ -7,7 +7,7 @@
       </div>
       
       <!-- 수정 완료 시 #post-card-{{post._id}} 영역만 갱신 후 모달 닫기 -->
-      <form hx-patch="/posts/{{post._id}}" 
+      <form hx-patch="/posts/{{post._id}}?current_category={{ current_category }}" 
             hx-target="#post-card-{{post._id}}" 
             hx-swap="outerHTML" 
             hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
