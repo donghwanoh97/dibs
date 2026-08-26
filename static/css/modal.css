@@ -99,6 +99,10 @@ dialog.custom-modal {
   border-top: 1px solid #eee;
 }
 
+.post-detail .modal-footer {
+  justify-content: center;
+}
+
 .btn {
   padding: 8px 16px;
   border-radius: 6px;

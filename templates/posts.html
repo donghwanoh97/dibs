@@ -62,6 +62,14 @@
             gap: 1rem;
             }
 
+            .card {
+              cursor: pointer;
+            }
+
+            .card:hover {
+              background-color: antiquewhite;
+            }
+
             .logo {
               font-family: "Do Hyeon", sans-serif;
               font-weight: 400; /* 도현체는 단일 굵기(400)만 지원합니다 */
@@ -116,9 +124,12 @@
           '참여중': 'text-bg-primary'
         } %}
 
+
+      <div id="modal-container"></div>
+
         <div id="card-list">
           {% for post in posts %}
-          <div class="card h-100"">
+          <div class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
             <div class="card-body">
               {# 매핑된 클래스를 불러오고, 없을 경우 기본값 text-bg-secondary 적용 #}
               <h5><span class="badge {{ category_colors.get(post.category, 'text-bg-secondary')}}">{{post.category}}</span></h5>
@@ -134,7 +145,7 @@
         </div>
       </div>
 
-      <div id="modal-container"></div>
+      <div id="post-detail-modal-container"></div>
 
       <script>
         const CATEGORY_COLORS = {
