@@ -140,12 +140,12 @@ def find_pw():
     user_id = request.form.get('user_id')
 
     if not user_id:
-        return jsonify({'result': 'fail', 'msg': '이메일을 입력해 주세요.'})
+        return jsonify({'result': 'fail', 'msg': 'ID를 입력해 주세요.'})
 
     user = db.users.find_one({'user_id' : user_id})
 
     if not user:
-        return jsonify({'result': 'fail', 'msg': '등록되지 않은 이메일입니다.'})
+        return jsonify({'result': 'fail', 'msg': '등록되지 않은 ID입니다.'})
 
     characters = string.ascii_letters + string.digits
     temp_password = ''.join(random.choice(characters) for _ in range(8))

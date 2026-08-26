@@ -16,29 +16,21 @@
             <a href="/"><h1 class="signup-title logo">DIBS!</h1></a>
             <div class="signup-card">
 
-                <!-- 1. 이메일 -->
+                <!-- 1. ID -->
                 <div class="form-row">
-                    <label class="form-label" for="user-email">이메일: </label>
-                    <input type="text" id="user-email" class="form-input input-width-btn" placeholder="등록한 이메일 입력">
-                    <button type="button" class="btn-sub" onclick="sendAuthCode()">보내기</button>
+                    <label class="form-label" for="user-email">ID: </label>
+                    <input type="text" id="user-email" class="form-input input-width-btn">
                 </div>
 
-                <!-- 2. 인증번호 -->
-                <div class="form-row">
-                    <label class="form-label" for="auth-number">인증번호: </label>
-                    <input type="text" id="auth-number" class="form-input input-width-btn" placeholder="인증번호 입력">
-                    <button id="verify-btn" type="button" class="btn-sub" onclick="verifyAuthCode()">인증</button>
-                </div>
-
-                <button type="button" class="btn-submit" onclick="findPassword()">완료</button>
+                <button style="width:130px" type="button" class="btn-submit" onclick="findPassword()">임시 비밀번호 받기</button>
             </div>
         </div>
         <script>
-            // 이메일 인증번호 보내기
+            // ID 인증번호 보내기
             function sendAuthCode() {
                 const userEmail = $('#user-email').val().trim();
                 if (!userEmail) {
-                    alert('이메일을 입력해 주세요');
+                    alert('ID를 입력해 주세요');
                     $('#user-email').focus();
                     return;
                 }
