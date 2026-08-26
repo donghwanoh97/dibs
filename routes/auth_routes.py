@@ -156,8 +156,8 @@ def find_pw():
     # 입력한 ID가 DB에 없는 경우 메시지 반환 후 함수 종료
 
     # 임시 비밀번호 생성 (8자리 영문 + 숫자)
-    
 
+    # DB에 암호화된 임시 비밀번호 업데이트
 
 # 9. 로그아웃 처리(POST)
 @auth_bp.route('/api/log-out', methods=['POST'])
