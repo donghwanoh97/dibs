@@ -4,41 +4,83 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        
         <title>dibs!</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-        <!-- Flask 서버 실행(실제 백엔드 연동)시 다음으로 변경 -->
-         <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}"> -->
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
     </head>
     <body>
         <div class="signup-wrap">
             <h1 class="signup-title logo">DIBS!</h1>
             <div class="signup-card">
 
-                <!-- 1. 이메일 -->
+                <!-- 1. 이름 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">이메일: </label>
-                    <input type="text" id="user-name" class="form-input input-width-btn">
-                    <button type="button" class="btn-sub">보내기</button>
-                </div>
-
-                <!-- 2. 인증번호 -->
-                <div class="form-row">
-                    <label class="form-label" for="user-name">인증번호: </label>
+                    <label class="form-label" for="user-name">이름: </label>
                     <input type="text" id="user-name" class="form-input">
-                    <button id="verify-btn" type="button" class="btn-sub">인증</button>
                 </div>
 
-                <!-- 3. 당신의 ID -->
-                <p id="result-id" class="your-id hidden">당신의 ID: asdf</p>
+                <!-- 2. 닉네임 (동명이인 식별용)-->
+                <div class="form-row">
+                    <label class="form-label" for="user-nickname">닉네임: </label>
+                    <input type="text" id="user-nickname" class="form-input">
+                </div>
+
+                <button type="button" class="btn-submit" onclick="findId()">ID 찾기</button>
+
+                <!-- 3. 당신의 ID 결과-->
+                <p id="result-id" class="your-id hidden"></p>
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        
+        <!-- ID 찾기 AJAX 처리 스크립트 -->
+        <script>
+            function findId() {
+                const userName = $('#user-name').val().trim();
+                const userNickname = $('#user-nickname').val().trim();
 
-        <script src="../static/js/main.js"></script>
+                if (!userName) {
+                    alert('이름을 입력해 주세요.');
+                    $('#user-name').focus();
+                    return;
+                }
+
+                if (!userNickname) {
+                    alert('닉네임을 입력해 주세요.');
+                    $('#user-nickname').focus();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/auth/api/find-id',
+                    data: {
+                        user_name: userName,
+                        user_nickname: userNickname
+                    },
+                    success: function (response) {
+                        if (response.result === 'success') {
+                            $('#result-id')
+                                .text('당신의 ID: ' + response.user_id)
+                                .removeClass('hidden');
+                        }
+
+                        else {
+                            alert(response.msg);
+                            $('#result-id').addClass('hidden');
+                        }
+                    },
+                    error: function () {
+                        alert('ID 찾기 요청 중 오류가 발생했습니다.')
+                    }
+                });
+            }
+        </script>
     </body>
 </html>

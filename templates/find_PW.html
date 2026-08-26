@@ -9,9 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-        <!-- Flask 서버 실행(실제 백엔드 연동)시 다음으로 변경 -->
-         <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}"> -->
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
     </head>
     <body>
         <div class="signup-wrap">
@@ -20,22 +18,75 @@
 
                 <!-- 1. 이메일 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">이메일: </label>
-                    <input type="text" id="user-name" class="form-input input-width-btn">
-                    <button type="button" class="btn-sub">보내기</button>
+                    <label class="form-label" for="user-email">이메일: </label>
+                    <input type="text" id="user-email" class="form-input input-width-btn" placeholder="등록한 이메일 입력">
+                    <button type="button" class="btn-sub" onclick="sendAuthCode()">보내기</button>
                 </div>
 
                 <!-- 2. 인증번호 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">인증번호: </label>
-                    <input type="text" id="user-name" class="form-input">
-                    <button id="verify-btn" type="button" class="btn-sub">인증</button>
+                    <label class="form-label" for="auth-number">인증번호: </label>
+                    <input type="text" id="auth-number" class="form-input" placeholder="인증번호 입력">
+                    <button id="verify-btn" type="button" class="btn-sub" onclick="verifyAuthCode()">인증</button>
                 </div>
 
-                <button type="submit" class="btn-submit">완료</button>
+                <button type="button" class="btn-submit" onclick="findPassword()">완료</button>
             </div>
         </div>
+        <script>
+            // 이메일 인증번호 보내기
+            function sendAuthCode() {
+                const userEmail = $('#user-email').val().trim();
+                if (!userEmail) {
+                    alert('이메일을 입력해 주세요');
+                    $('#user-email').focus();
+                    return;
+                }
+                alert('인증번호가 발송되었습니다');
+            }
 
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            // 인증번호 확인
+            function verifyAuthCode() {
+                const authNumber = $('#auth-numver').val().trim();
+                if (!authNumber) {
+                    alert('인증번호를 입력해 주세요.');
+                    $('#auth-number').focus();
+                    return;
+                }
+                alert('인증이 완료되었습니다.');
+            }
+
+            // 비밀번호 찾기 및 임시 비밀번호 발급
+            function findPassword() {
+                const userEmail = $('#user-email').val().trim();
+
+                if (!userEmail) {
+                    alert('이메일을 입력해 주세요.');
+                    $('#user-email').focus();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/auth/api/find-pw',
+                    data: {
+                        user_id: userEmail
+                    },
+                    success: function (response) {
+                        if (response.result === 'success') {
+                            alert(response.msg);
+                            window.location.href = '/auth/login';
+                        }
+
+                        else {
+                            alert(response.msg);
+                        }
+                    },
+                    error: function () {
+                        alert('비밀번호 찾기 요청 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        </script>
     </body>
 </html>

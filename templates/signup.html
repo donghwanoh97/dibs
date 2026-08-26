@@ -9,9 +9,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
-        <!-- Flask 서버 실행(실제 백엔드 연동)시 다음으로 변경 -->
-         <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}"> -->
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
     </head>
     <body>
         <div class="signup-wrap">
@@ -21,43 +19,123 @@
 
                 <!-- 1. 이름 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">이름: </label>
-                    <input type="text" id="user-name" class="form-input">
+                    <label class="form-label" for="userName">이름: </label>
+                    <input type="text" id="userName" class="form-input">
                 </div>
 
                 <!-- 2. 닉네임 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">닉네임: </label>
-                    <input type="text" id="user-name" class="form-input">
+                    <label class="form-label" for="userNickname">닉네임: </label>
+                    <input type="text" id="userNickname" class="form-input">
                 </div>
 
                 <!-- 3. 이메일 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">이메일: </label>
-                    <input type="text" id="user-name" class="form-input input-width-btn">
+                    <label class="form-label" for="userId">이메일: </label>
+                    <input type="text" id="userId" class="form-input input-width-btn">
                     <button type="button" class="btn-sub">보내기</button>
                 </div>
 
                 <!-- 4. 인증번호 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">인증번호: </label>
-                    <input type="text" id="user-name" class="form-input input-width-btn">
+                    <label class="form-label" for="authNumber">인증번호: </label>
+                    <input type="text" id="authNumber" class="form-input input-width-btn">
                     <button type="button" class="btn-sub">인증</button>
                 </div>
 
                 <!-- 5. PW -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">PW: </label>
-                    <input type="password" id="user-name" class="form-input">
+                    <label class="form-label" for="userPassword">PW: </label>
+                    <input type="password" id="userPassword" class="form-input">
                 </div>
 
                 <!-- 6. PW 확인 -->
                 <div class="form-row">
-                    <label class="form-label" for="user-name">PW 확인: </label>
-                    <input type="password" id="user-name" class="form-input">
+                    <label class="form-label" for="userPasswordConfirm">PW 확인: </label>
+                    <input type="password" id="userPasswordConfirm" class="form-input">
                 </div>
-                <button type="submit" class="btn-submit">회원가입</button>
+                <button type="button" class="btn-submit" onclick="signUp()">회원가입</button>
             </div>
         </div>
+        <!-- 회원가입 AJAX 처리 스크립트 -->
+        <script>
+            function signUp() {
+                const userName = $('#userName').val().trim();
+                const userNickname = $('#userNickname').val().trim();
+                const userId = $('#userId').val().trim();
+                const userPassword = $('#userPassword').val().trim();
+                const userPasswordConfirm = $('#userPasswordConfirm').val().trim();
+
+                if (!userName) {
+                    alert('이름을 입력해 주세요.');
+                    $('#userName').focus();
+
+                    return;
+                }
+
+                if (!userNickname) {
+                    alert('닉네임을 입력해 주세요.');
+                    $('#userNickname').focus();
+
+                    return;
+                }
+
+                if (!userId) {
+                    alert('이메일을 입력해 주세요.');
+                    $('#userId').focus();
+
+                    return;
+                }
+
+                if (!userPassword) {
+                    alert('비밀번호를 입력해 주세요.');
+                    $('#userPassword').focus();
+
+                    return;
+                }
+
+                // 비밀번호 유효성 검사 (최소 8자 이상, 영문 + 숫자)
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+                if (!passwordRegex.test(userPassword)) {
+                    alert('비밀번호는 영문과 숫자를 포함하여 8자리 이상이어야 합니다.');
+                    $('#userPassword').focus();
+
+                    return;
+                }
+
+                if (userPassword !== userPasswordConfirm) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    $('#userPasswordConfirm').focus();
+
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/auth/api/sign-up',
+                    data: {
+                        user_name: userName,
+                        user_nickname: userNickname,
+                        user_id: userId,
+                        password: userPassword
+                    },
+                    success: function (response) {
+                        if (response.result === 'success') {
+                            alert(response.msg);
+                            window.location.href = '/auth/login';
+                        }
+
+                        else {
+                            alert(response.msg);
+                        }
+                    },
+
+                    error: function () {
+                        alert('회원가입 요청 중 오류가 발생했습니다');
+                    }
+                });
+            }
+        </script>
     </body>
 </html>
