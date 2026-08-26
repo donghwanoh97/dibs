@@ -37,7 +37,7 @@ def get_main_page():
     if not user_payload:
         return redirect('/auth/login')
 
-    return render_template('posts.html', user_id=user_payload['user_id'])
+    return redirect('/')
 
 # 1. 로그인 페이지 렌더링(GET)
 @auth_bp.route('/login', methods=['GET'])
@@ -112,7 +112,7 @@ def signup():
     if db.users.find_one({'user_nickname': user_nickname}):
         return jsonify({'result': 'fail', 'msg': '이미 존재하는 닉네임입니다.'})
 
-    hashed_password = generate_password_hash(raw_password)
+    hashed_password = generate_password_hash(raw_password , method="pbkdf2:sha256")
 
     db.users.insert_one({
         'user_name': user_name, 
@@ -159,7 +159,7 @@ def find_pw():
     characters = string.ascii_letters + string.digits
     temp_password = ''.join(random.choice(characters) for _ in range(8))
 
-    hashed_password = generate_password_hash(temp_password)
+    hashed_password = generate_password_hash(temp_password, method="pbkdf2:sha256")
     db.users.update_one({'user_id': user_id}, {'$set': {'password': hashed_password}})
 
     return jsonify({
