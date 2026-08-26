@@ -148,16 +148,33 @@ def find_id():
 @auth_bp.route('/api/find-pw', methods=['POST'])
 def find_pw():
     # 사용자의 ID를 가져와 변수에 저장
+    user_id = request.form.get('user_id')
 
     # ID를 입력하지 않았을 경우 메시지 반환 후 함수 종료
+    if not user_id:
+        return jsonify({'result': 'fail', 'msg': '이메일을 입력해 주세요.'})
 
     # DB에서 사용자 조회
+    user = db.users.find_one({'user_id' : user_id})
 
     # 입력한 ID가 DB에 없는 경우 메시지 반환 후 함수 종료
+    if not user:
+        return jsonify({'result': 'fail', 'msg': '등록되지 않은 이메일입니다.'})
 
     # 임시 비밀번호 생성 (8자리 영문 + 숫자)
+    characters = string.ascii_letters + string.digits
+    temp_password = ''.join(random.choice(characters) for _ in range(8))
 
     # DB에 암호화된 임시 비밀번호 업데이트
+    hashed_password = generate_password_hash(temp_password)
+    db.users.update_one({'user_id': user_id}, {'$set': {'password': hashed_password}})
+
+    # TODO: 실제 서비스 시 Flask-Mail을 이용해 user_id(이메일)로 temp_password를 발급 전송
+    # 현재는 인증번호 및 이메일 전송 기능 연동 전이므로 성공 메시지와 함께 임시 비밀번호를 반환하도록 처리
+    return jsonify({
+        'result': 'success',
+        'msg': f'임시 비밀번호가 발급되었습니다: {temp_password}\n로그인 후 비밀번호를 변경해 주세요.'
+    })
 
 # 9. 로그아웃 처리(POST)
 @auth_bp.route('/api/log-out', methods=['POST'])
