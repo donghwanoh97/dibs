@@ -19,6 +19,10 @@
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">참여하기</button>
         </div>
+        <div class="modal-footer">
+          <button hx-get="/posts/{{post._id}}/edit" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
+          <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
+        </div>
       </form>
     </div>
   </dialog>

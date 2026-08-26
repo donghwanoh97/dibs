@@ -129,7 +129,7 @@
 
         <div id="card-list">
           {% for post in posts %}
-          <div class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
+          <div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
             <div class="card-body">
               {# 매핑된 클래스를 불러오고, 없을 경우 기본값 text-bg-secondary 적용 #}
               <h5><span class="badge {{ category_colors.get(post.category, 'text-bg-secondary')}}">{{post.category}}</span></h5>
