@@ -116,4 +116,4 @@ def edit_post(post_id):
 
   updated_post = db.posts.find_one({'_id': ObjectId(post_id)})
 
-  return render_template('post_card.html', post=updated_post)
+  return render_template('post_card.html', post=updated_post, categories=CATEGORIES)
