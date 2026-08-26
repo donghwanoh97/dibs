@@ -146,11 +146,16 @@ def edit_post(post_id):
 def update_nickname():
     new_nickname = request.form.get('user_nickname')
 
-    print(user_id, new_nickname)
-    response = db.users.update_one(
-        {'user_id': user_id},
+    user_payload = verify_token()
+    if not user_payload:
+      return "로그인이 필요합니다.", 401
+    
+    user = db.users.find_one({'user_id': user_payload['user_id']})
+    db.users.update_one(
+        {'_id': user['_id']},
         {'$set': {'user_nickname': new_nickname}}
     )
 
-
-    return "", 200
+    response = make_response("", 200)
+    response.headers['HX-Redirect'] = '/posts'
+    return response
