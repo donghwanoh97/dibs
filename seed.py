@@ -83,7 +83,7 @@ db.posts.insert_many(posts)
 print(f"{len(posts)}개의 더미 데이터를 삽입했습니다.")
 
 # 회원가입 규칙(영문+숫자 8자 이상)을 만족하는 기본 비밀번호 해시 생성 ("test1234!")
-common_password_hash = generate_password_hash("test1234!")
+common_password_hash = generate_password_hash("test1234!", method="pbkdf2:sha256")
 
 # 회원가입 폼 구조에 맞춘 유저 더미 데이터 목록
 users = [
