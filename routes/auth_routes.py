@@ -2,8 +2,10 @@
 
 # 날짜와 시간 정보를 다루는 파이썬 기본 도구(JWT 토큰 만료 시간 설정에 필요)
 import datetime
-
 import jwt
+# 임시 비밀번호 발급 기능을 위한 도구
+import string
+import random
 
 from flask import Blueprint, render_template, request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -36,8 +38,13 @@ def get_signup_page():
 def get_find_id_page():
     return render_template('find_id.html')
 
+# 4. PW 찾기 페이지 렌더링(GET)
+# 사용자가 접속(GET)하면 PW 찾기 페이지를 브라우저에 렌더링
+@auth_bp.route('/find-pw', methods=['GET'])
+def get_find_pw_page():
+    return render_template('find_pw.html')
 
-# 3. 로그인 처리(POST) - JWT 발급 및 쿠키 저장
+# 5. 로그인 처리(POST) - JWT 발급 및 쿠키 저장
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
     # 사용자가 입력한 id와 password를 변수에 저장
@@ -81,7 +88,7 @@ def login():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디 또는 비밀번호가 일치하지 않습니다.'})    
 
-# 4. 회원가입 처리(POST)
+# 6. 회원가입 처리(POST)
 @auth_bp.route('/api/sign-up', methods=['POST'])
 def signup():
     # 사용자가 입력한 id와 password를 변수에 저장
@@ -108,7 +115,7 @@ def signup():
 
     return jsonify({'result': 'success', 'msg': '회원가입이 완료되었습니다.'})
 
-# 5. ID 찾기 처리 (POST) -> 동명이인 대응 방법 (이름 + 닉네임 조회)
+# 7. ID 찾기 처리(POST) -> 동명이인 대응 방법 (이름 + 닉네임 조회)
 @auth_bp.route('/api/find-id', methods=['POST'])
 def find_id():
     # 이름, 닉네임 저장
@@ -137,7 +144,22 @@ def find_id():
         # 실패 메시지를 보낸다.
         return jsonify({'result': 'fail', 'msg': '일치하는 회원 정보를 찾을 수 없습니다.'})
 
-# 6. 로그아웃 처리 (POST)
+# 8. PW 찾기/재설정 처리(POST)
+@auth_bp.route('/api/find-pw', methods=['POST'])
+def find_pw():
+    # 사용자의 ID를 가져와 변수에 저장
+
+    # ID를 입력하지 않았을 경우 메시지 반환 후 함수 종료
+
+    # DB에서 사용자 조회
+
+    # 입력한 ID가 DB에 없는 경우 메시지 반환 후 함수 종료
+
+    # 임시 비밀번호 생성 (8자리 영문 + 숫자)
+    
+
+
+# 9. 로그아웃 처리(POST)
 @auth_bp.route('/api/log-out', methods=['POST'])
 def logout():
     # 응답 객체를 만들어 기존에 발급한 access_token 쿠키 삭제
