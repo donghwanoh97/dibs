@@ -99,7 +99,26 @@ def get_post_detail_modal(post_id):
 
   if not post:
     return "게시글을 찾을 수 없습니다.", 404
-  return render_template('modals/post_detail.html', post=post)
+  author_user = db.users.find_one({'_id': post.get('author')})
+  author_nickname = author_user.get('user_nickname', 'unknown') if author_user else 'unknown'
+
+  joined_user_ids = post.get('joined_users', [])
+  joined_users_info = list(db.users.find({'_id': {'$in': joined_user_ids}}))
+
+  joined_nicknames = [u.get('user_nickname') for u in joined_users_info]
+
+
+  user_payload = verify_token()
+  if not user_payload:
+    return "로그인이 필요합니다.", 401
+  
+  user = db.users.find_one({'user_id': user_payload['user_id']})
+  user_id = user['_id']
+  author_id = post['author']
+
+  is_joined = user_id in joined_user_ids
+
+  return render_template('modals/post_detail.html', is_joined=is_joined, user_id=user_id, author_id = author_id, post=post, author_nickname=author_nickname, joined_nicknames=joined_nicknames)
   
 @posts_bp.route('/<post_id>', methods=['DELETE'])
 def delete_post(post_id):

@@ -11,17 +11,32 @@
           <p>날짜 : {{post.date}}</p>
           <p>시간 : {{post.time}}</p>
           <p>참여인원 : {{post.joined_users | length}} / {{post.max_count}}</p>
-          <p>작성자 : {{post.author}}</p>
-          <p>참여자 : {{post.joined_users}}</p>
+          <p>작성자 : {{ author_nickname }}</p>
+          <p>참여자 : {{ joined_nicknames | join(', ')}}</p>
           <p>내용 : {{post.content}}</p>
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">참여하기</button>
-        </div>
-        <div class="modal-footer">
-          <button hx-get="/posts/{{post._id}}/edit" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
-          <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
+          <div>
+            {% if is_joined %}
+              {% if user_id != author_id %}
+              <button hx-post="/posts/{{post._id}}/leave" 
+              hx-target="#post-detail-modal-container" 
+              hx-swap="innerHTML" 
+              type="button" 
+              class="btn btn-warning">참여 취소하기</button>
+              {% endif %}
+            {% else %}
+            <!-- 참여하지 않은 경우: 참여하기 버튼 -->
+            <button type="submit" class="btn btn-primary">참여하기</button>
+            {% endif %}
+          </div>
+          {% if user_id == author_id %}
+          <div>
+            <button hx-get="/posts/{{post._id}}/edit" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
+            <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
+          </div>
+          {% endif %}
         </div>
       </form>
     </div>

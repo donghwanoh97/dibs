@@ -100,7 +100,8 @@ dialog.custom-modal {
 }
 
 .post-detail .modal-footer {
-  justify-content: center;
+  justify-content: space-between;
+
 }
 
 .btn {
