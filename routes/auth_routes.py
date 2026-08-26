@@ -29,15 +29,6 @@ def verify_token():
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
 
-# 0. 메인 페이지 렌더링(GET)
-@auth_bp.route('/', methods=['GET'])
-def get_main_page():
-    user_payload = verify_token()
-
-    if not user_payload:
-        return redirect('/auth/login')
-
-    return redirect('/')
 
 # 1. 로그인 페이지 렌더링(GET)
 @auth_bp.route('/login', methods=['GET'])
@@ -45,7 +36,7 @@ def get_login_page():
     user_payload = verify_token()
 
     if user_payload:
-        return redirect(url_for('auth.get_main_page'))
+        return redirect(url_for('posts.get_posts'))
     
     return render_template('login.html')
 
@@ -55,7 +46,7 @@ def get_signup_page():
     user_payload = verify_token()
 
     if user_payload:
-        return redirect(url_for('auth.get_main_page'))
+        return redirect(url_for('posts.get_posts'))
 
     return render_template('signup.html')
 
@@ -89,7 +80,7 @@ def login():
             token = token.decode('utf-8')
 
         response = make_response(jsonify({'result': 'success', 'msg': '로그인 성공!'}))
-        response.set_cookie('access_token', token, httponly=True, samesite='Lax', path='/')
+        response.set_cookie('access_token', token, httponly=True, max_age=3600, samesite='Lax', path='/')
 
         return response
     else:
@@ -167,32 +158,22 @@ def find_pw():
         'msg': f'임시 비밀번호가 발급되었습니다: {temp_password}\n로그인 후 비밀번호를 변경해 주세요.'
     })
 
-# 9. 로그아웃 처리(POST)
-@auth_bp.route('/api/log-out', methods=['POST'])
-def logout():
-    response = make_response(jsonify({'result': 'success', 'msg': '로그아웃되었습니다.'}))
-    response.delete_cookie('access_token', path='/')
-
-    return response
-
 # 10. 비밀번호 재설정(POST)
 @auth_bp.route('/api/rename-pw', methods=['POST'])
 def rename_password_api():
-    # 토큰 또는 세션에서 유저 식별자 확인 (JWT 토큰 쿠키 기준 예시)
-    token_receive = request.cookies.get('mytoken')
-    if not token_receive:
+    # 공통 검증 함수 사용 (내부에서 access_token 쿠키를 검증)
+    user_payload = verify_token()
+    if not user_payload:
         return jsonify({'result': 'fail', 'msg': '로그인이 필요하거나 인증 세션이 만료되었습니다.'})
-    
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_id = payload['id']
-        new_password = request.form.get('new_password')
 
-        hashed_password = hashlib.sha256(new_password.encode('utf-8')).hexdigest()
-        db.users.update_one({'user_id': user_id}, {'$set': {'password': hashed_password}})
+    user_id = user_payload['user_id']
+    new_password = request.form.get('new_password')
 
-        return jsonify({'result': 'success', 'msg': '비밀번호가 성공적으로 변경되었습니다.'})
-    except jwt.ExpiredSignatureError:
-        return jsonify({'result': 'fail', 'msg': '인증 토큰이 만료되었습니다.'})
-    except jwt.exceptions.DecodeError:
-        return jsonify({'result': 'fail', 'msg': '유효하지 않은 토큰입니다.'})
+    if not new_password:
+        return jsonify({'result': 'fail', 'msg': '새 비밀번호를 입력해 주세요.'})
+
+    # 동일한 해시 함수로 저장
+    hashed_password = generate_password_hash(new_password)
+    db.users.update_one({'user_id': user_id}, {'$set': {'password': hashed_password}})
+
+    return jsonify({'result': 'success', 'msg': '비밀번호가 성공적으로 변경되었습니다.'})
