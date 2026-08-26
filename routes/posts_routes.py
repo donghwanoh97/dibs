@@ -3,6 +3,7 @@ from bson import ObjectId
 from jinja2 import TemplateNotFound
 from pymongo import MongoClient
 from datetime import datetime, timezone
+from routes.auth_routes import verify_token
 
 posts_bp = Blueprint('posts', __name__, template_folder = 'templates')
 
@@ -35,6 +36,9 @@ FILTER_CATEGORIES = {
 
 @posts_bp.route('/')
 def get_posts():
+  user_payload = verify_token()
+  user_id = user_payload['user_id'] if user_payload else None
+  
   selected_category = request.args.get('category', 'all')
 
   if selected_category == 'all':

@@ -95,7 +95,7 @@
             <a class="logo" href="/">DIBS!</a>
             <div class="user-menu">
               <button class="btn-sub">사용자1님</span>
-              <button class="btn-sub">로그아웃</button>
+              <button class="btn-sub" onclick="logout()">로그아웃</button>
             </div>
           </div>
 
@@ -142,6 +142,23 @@
 
       <div id="post-detail-modal-container"></div>
 
+      <script>
+        function logout() {
+          $.ajax({
+            type: "POST",
+            url: '/auth/api/log-out',
+            success: function (response) {
+              if (response['result'] === 'success') {
+                alert(response['msg']);
+                window.location.href = '/auth/login';
+              }
+            },
+            error: function () {
+              alert('로그아웃 처리 중 오류가 발생했습니다.')
+            }
+          })
+        }
+      </script>
 <!-- CSR(ajax 방식)
       <script>
         $(document).ready(function () {
