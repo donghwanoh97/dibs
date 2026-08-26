@@ -11,7 +11,7 @@
             hx-target="#post-card-{{post._id}}" 
             hx-swap="outerHTML" 
             hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
-            hx-confirm="정말 수정하겠습니까?"
+            onsubmit="return confirm('정말 수정하겠습니까?')"
             >
         
         <div class="modal-body">
@@ -31,7 +31,7 @@
         </div>
 
         <div class="modal-footer">
-          <button hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-secondary" ">취소</button>
+          <button hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-secondary">취소</button>
           <button type="submit" class="btn btn-primary">수정하기</button>
         </div>
       </form>

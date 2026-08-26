@@ -17,8 +17,16 @@
         <!-- Flask 서버 실행(실제 백엔드 연동)시 다음으로 변경 -->
          <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}"> -->
           <style>
+            html, body {
+              height: 100%;
+              margin: 0;
+              padding: 0;
+              display: block;
+              overflow-y: scroll;
+            }
             .container {
               width: 800px;
+              margin: 0 auto; 
               padding: 24px 0;
             }
             .header-container {
@@ -56,10 +64,10 @@
             }
 
             #card-list {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+              width: 100%;
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+              gap: 1rem;
             }
 
             .card {
@@ -74,6 +82,8 @@
               font-family: "Do Hyeon", sans-serif;
               font-weight: 400; /* 도현체는 단일 굵기(400)만 지원합니다 */
               font-size: 48px;
+              color: black;
+              text-decoration: none;
             }
 
           </style>
@@ -82,7 +92,7 @@
       <div class="container">
         <header class="header-container">
           <div class="top-bar">
-            <div class="logo">DIBS!</div>
+            <a class="logo" href="/">DIBS!</a>
             <div class="user-menu">
               <button class="btn-sub">사용자1님</span>
               <button class="btn-sub">로그아웃</button>
