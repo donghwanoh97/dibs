@@ -1,0 +1,18 @@
+{# 카테고리별 배지 클래스 매핑 #}
+{% set category_colors = {
+  '공부': 'text-bg-success',
+  '식사': 'text-bg-danger',
+  '참여중': 'text-bg-primary'
+} %}
+
+<div class="card h-100"">
+  <div class="card-body">
+    <h5><span class="badge {{ category_colors.get(post.category, 'text-bg-secondary')}}">{{post.category}}</span></h5>
+    <h5 class="card-title">{{post.title}}</h5>
+    <hr/>
+    <p class="card-date">날짜 : {{post.date}}</p>
+    <p class="card-time">시간 : {{post.time}}</p>
+    <p class="card-max-count">참여인원 : {{post.joined_users | length}}/{{post.max_count}}</p>
+    <p class="card-joined-users">참여자 : 김철수, 박영희</p>
+  </div>
+</div>

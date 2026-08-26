@@ -85,5 +85,30 @@ def get_posts():
 
   return render_template('posts.html', posts=posts, current_category=selected_category)
 
-#@posts_bp.route('/', methods=['POST'])
-#def post_meeting():
+@posts_bp.route('/new-modal')
+def get_create_post_modal():
+  categories = ['공부', '식사']
+  return render_template('modals/create_post.html', categories=categories)
+  
+
+@posts_bp.route('/', methods=['POST'])
+def post_meeting():
+  title_receive = request.form['title']
+  date_receive = request.form['date']
+  time_receive = request.form['time']
+  max_count_receive = request.form['max_count']
+
+  new_post = {
+        'title': title_receive,
+        'date': date_receive,
+        'time': time_receive,
+        'max_count': max_count_receive,
+        'category': '공부',
+        'joined_users': []
+    }
+  
+  db.posts.insert_one(new_post)
+
+  return render_template('post_card.html', post=new_post)
+
+
