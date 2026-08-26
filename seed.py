@@ -1,9 +1,8 @@
 from pymongo import MongoClient
-
+from werkzeug.security import generate_password_hash
 
 client = MongoClient("mongodb://localhost:27017/")
 from database import db 
-
 
 posts = [
     {
@@ -82,3 +81,64 @@ db.posts.delete_many({})
 db.posts.insert_many(posts)
 
 print(f"{len(posts)}개의 더미 데이터를 삽입했습니다.")
+
+# 회원가입 규칙(영문+숫자 8자 이상)을 만족하는 기본 비밀번호 해시 생성 ("test1234!")
+common_password_hash = generate_password_hash("test1234!")
+
+# 회원가입 폼 구조에 맞춘 유저 더미 데이터 목록
+users = [
+    {
+        "user_name": "오동환",
+        "user_nickname": "동12",
+        "user_id": "a@a.com",
+        "password": "pbkdf2:sha256:1000000$0EcHo6GxSPVBUXWQ$0eb79a90109f4738e501021493d22eff6cd73e987c948f8c3a8e99be7c8c3116",
+    },
+    {
+        "user_name": "오동환",
+        "user_nickname": "동동",
+        "user_id": "aaa",
+        "password": "pbkdf2:sha256:1000000$P6SYiWc54B6kqndv$2ba7ffbe8edf4b50f8ccac31d4acf5aa3973003a0836787ba6288e12ac6cf2b4",
+    },
+    {
+        "user_name": "김철수",
+        "user_nickname": "철수왕",
+        "user_id": "chulsoo@test.com",
+        "password": common_password_hash,
+    },
+    {
+        "user_name": "이영희",
+        "user_nickname": "영희네",
+        "user_id": "younghee@test.com",
+        "password": common_password_hash,
+    },
+    {
+        "user_name": "박민수",
+        "user_nickname": "민수코딩",
+        "user_id": "minsu@test.com",
+        "password": common_password_hash,
+    },
+    {
+        "user_name": "정수진",
+        "user_nickname": "수진스",
+        "user_id": "sujin@test.com",
+        "password": common_password_hash,
+    },
+    {
+        "user_name": "최현우",
+        "user_nickname": "현우짱",
+        "user_id": "hyunwoo@test.com",
+        "password": common_password_hash,
+    },
+    {
+        "user_name": "강지민",
+        "user_nickname": "지민키친",
+        "user_id": "jimin@test.com",
+        "password": common_password_hash,
+    },
+]
+
+# 기존 유저 데이터 초기화 및 신규 더미 데이터 삽입
+db.users.delete_many({})
+result = db.users.insert_many(users)
+
+print(f"{len(result.inserted_ids)}명의 유저 더미 데이터를 성공적으로 삽입했습니다.")

@@ -42,8 +42,8 @@ def get_posts():
     response = make_response(redirect(url_for('auth.get_login_page')))
     response.delete_cookie('access_token', path='/')
     return response
-
-  user_id = user_payload['user_id']
+  
+  user = db.users.find_one({'user_id': user_payload['user_id']})
   selected_category = request.args.get('category', 'all')
 
   if selected_category == 'all':
@@ -51,7 +51,7 @@ def get_posts():
   else:
     posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
 
-  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES, user_id=user_id)
+  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES, user=user)
 
 @posts_bp.route('/', methods=['POST'])
 def post_meeting():

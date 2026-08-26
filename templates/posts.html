@@ -44,8 +44,9 @@
 
             .bottom-bar {
               display: flex;
-              justify-content: flex-end; /* 오른쪽 정렬 */
+              justify-content: space-between; /* 오른쪽 정렬 */
               width: 100%;
+              margin-bottom: 6px;
             }
 
             .user-menu {
@@ -100,31 +101,31 @@
                 hx-target="#profile-modal-container"
                 hx-swap="innerHTML"
               >
-                {{user_id}}
+                {{user.user_nickname}}
               </button>
               <button class="btn-sub" onclick="logout()">로그아웃</button>
             </div>
           </div>
-
-          <div class="bottom-bar">
-            <button 
-              class="btn-sub"
-              hx-get="/posts/new-modal" 
-              hx-target="#modal-container" 
-              hx-swap="innerHTML"
-            >
-              글쓰기
-            </button>
-          </div>
         </header>
       
         <hr/>
-        <div id="category-list">
-          {% for value, category in filter_categories.items() %}
-          <a href="/posts?category={{ value }}">
-            <h4><span class="badge {{ category.class if current_category == value else 'text-bg-secondary' }}">{{ category.label }}</span></h4>
-          </a>
-          {% endfor %}
+        <div class="bottom-bar">
+          <div id="category-list">
+            {% for value, category in filter_categories.items() %}
+            <a href="/posts?category={{ value }}">
+              <h4><span class="badge {{ category.class if current_category == value else 'text-bg-secondary' }}">{{ category.label }}</span></h4>
+            </a>
+            {% endfor %}
+          </div>
+
+          <button 
+            class="btn-sub"
+            hx-get="/posts/new-modal" 
+            hx-target="#modal-container" 
+            hx-swap="innerHTML"
+          >
+            글쓰기
+          </button>
         </div>
 
       <div id="modal-container"></div>

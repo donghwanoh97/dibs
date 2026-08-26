@@ -6,7 +6,6 @@ import jwt
 # 임시 비밀번호 발급 기능을 위한 도구
 import string
 import random
-import hashlib
 
 from flask import Blueprint, render_template, request, jsonify, make_response, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
