@@ -82,7 +82,16 @@ def post_meeting():
 def get_create_post_modal():
   return render_template('modals/create_post.html', categories=CATEGORIES)
 
-  
+@posts_bp.route('/profile-modal')
+def get_profile_modal():
+    user_payload = verify_token()
+    if not user_payload:
+      return "로그인이 필요합니다.", 401
+    
+    user = db.users.find_one({'user_id': user_payload['user_id']})
+    return render_template('modals/profile.html', user=user)
+
+# 라우트 추가
 @posts_bp.route('/<post_id>/detail-modal')
 def get_post_detail_modal(post_id):
   
@@ -132,3 +141,16 @@ def edit_post(post_id):
     return "", 200
 
   return render_template('post_card.html', post=updated_post, categories=CATEGORIES)
+
+@posts_bp.route('/update-nickname', methods=['PATCH'])
+def update_nickname():
+    new_nickname = request.form.get('user_nickname')
+
+    print(user_id, new_nickname)
+    response = db.users.update_one(
+        {'user_id': user_id},
+        {'$set': {'user_nickname': new_nickname}}
+    )
+
+
+    return "", 200
