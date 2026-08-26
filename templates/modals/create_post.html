@@ -9,10 +9,11 @@
       <form hx-post="/posts" hx-target="#card-list" hx-swap="afterbegin" hx-on::after-request="document.getElementById('write-modal-backdrop').remove()">
         <div class="modal-body">
           <select name="category">
-          {% for category in categories %}
-            <option value={{category}}>{{category}}</option>
+          {% for value, category in categories.items() %}
+            <option value="{{ value }}">{{ category.label }}</option>
           {% endfor %}
           </select>
+          
           <input type="text" name="title" placeholder="제목을 입력하세요" required>
           <input type="date" name="date" required>
           <input type="time" name="time" required>

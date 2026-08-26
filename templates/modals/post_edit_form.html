@@ -7,7 +7,7 @@
       </div>
       
       <!-- 수정 완료 시 #post-card-{{post._id}} 영역만 갱신 후 모달 닫기 -->
-      <form hx-patch="/posts/{{post._id}}" 
+      <form hx-patch="/posts/{{post._id}}?current_category={{ current_category }}" 
             hx-target="#post-card-{{post._id}}" 
             hx-swap="outerHTML" 
             hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
@@ -16,8 +16,8 @@
         
         <div class="modal-body">
           <select name="category">
-          {% for category in categories %}
-            <option value="{{category}}" {% if category == post.category %}selected{% endif %}>{{category}}</option>
+          {% for value, category in categories.items() %}
+            <option value="{{ value }}" {% if value == post.category %}selected{% endif %}>{{category.label}}</option>
           {% endfor %}
           </select>
 

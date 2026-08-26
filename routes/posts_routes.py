@@ -9,17 +9,40 @@ posts_bp = Blueprint('posts', __name__, template_folder = 'templates')
 client = MongoClient('localhost', 27017)
 from database import db 
 
+CATEGORIES = {
+    "meal": {
+        "label": "식사",
+        "class": "text-bg-danger"
+    },
+    "study": {
+        "label": "공부",
+        "class": "text-bg-success"
+    }
+}
+
+FILTER_CATEGORIES = {
+    "all": {
+        "label": "전체",
+        "class": "text-bg-warning"
+    },
+    "study": CATEGORIES["study"],
+    "meal": CATEGORIES["meal"],
+    "joined": {
+        "label": "참여 중",
+        "class": "text-bg-primary"
+    }
+}
+
 @posts_bp.route('/')
 def get_posts():
-  selected_category = request.args.get('category', '전체')
+  selected_category = request.args.get('category', 'all')
 
-  if selected_category == '전체':
+  if selected_category == 'all':
     posts = list(db.posts.find({}).sort('created_at', -1))
   else:
     posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
 
-  return render_template('posts.html', posts=posts, current_category=selected_category)
-
+  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES)
 
 @posts_bp.route('/', methods=['POST'])
 def post_meeting():
@@ -28,13 +51,14 @@ def post_meeting():
   time_receive = request.form['time']
   max_count_receive = request.form['max_count']
   content_receive = request.form['content']
+  category_receive = request.form['category']
 
   new_post = {
         'title': title_receive,
         'date': date_receive,
         'time': time_receive,
         'max_count': max_count_receive,
-        'category': '공부',
+        'category': category_receive,
         'content': content_receive,
         'author': '김철수',
         'joined_users': [1, 2],
@@ -43,19 +67,18 @@ def post_meeting():
   
   db.posts.insert_one(new_post)
 
-  return render_template('post_card.html', post=new_post)
+  return render_template('post_card.html', post=new_post, categories=CATEGORIES)
 
 @posts_bp.route('/new-modal')
 def get_create_post_modal():
-  categories = ['공부', '식사']
-  return render_template('modals/create_post.html', categories=categories)
+  return render_template('modals/create_post.html', categories=CATEGORIES)
 
   
 @posts_bp.route('/<post_id>/detail-modal')
 def get_post_detail_modal(post_id):
   
   post = db.posts.find_one({'_id': ObjectId(post_id)})
-  print(post_id)
+
   if not post:
     return "게시글을 찾을 수 없습니다.", 404
   return render_template('modals/post_detail.html', post=post)
@@ -67,9 +90,9 @@ def delete_post(post_id):
 
 @posts_bp.route('/<post_id>/edit')
 def get_edit_form(post_id):
-  categories = ['식사', '공부']
   post = db.posts.find_one({'_id': ObjectId(post_id)})
-  return render_template('/modals/post_edit_form.html', post=post, categories=categories)
+  curent_category = request.args.get('current_category', 'all')
+  return render_template('/modals/post_edit_form.html', post=post, categories=CATEGORIES, curent_category=curent_category)
 
 @posts_bp.route('/<post_id>', methods=['PATCH'])
 def edit_post(post_id):
@@ -79,7 +102,9 @@ def edit_post(post_id):
   max_count_receive = request.form['max_count']
   content_receive = request.form['content']
   category_receive = request.form.get('category')
-  
+
+  current_category = request.args.get('current_category', 'all')
+
   db.posts.update_one(
     {'_id': ObjectId(post_id)},
     {'$set': {
@@ -94,4 +119,7 @@ def edit_post(post_id):
 
   updated_post = db.posts.find_one({'_id': ObjectId(post_id)})
 
-  return render_template('post_card.html', post=updated_post)
+  if current_category != 'all' and updated_post['category'] != current_category:
+    return "", 200
+
+  return render_template('post_card.html', post=updated_post, categories=CATEGORIES)

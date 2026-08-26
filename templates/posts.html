@@ -113,27 +113,12 @@
       
         <hr/>
         <div id="category-list">
-          <a href="/posts?category=전체">
-            <h4><span class="badge {{ 'text-bg-warning' if current_category == '전체' else 'text-bg-secondary' }}">전체</span></h4>
+          {% for value, category in filter_categories.items() %}
+          <a href="/posts?category={{ value }}">
+            <h4><span class="badge {{ category.class if current_category == value else 'text-bg-secondary' }}">{{ category.label }}</span></h4>
           </a>
-          <a href="/posts?category=공부">
-            <h4><span class="badge {{ 'text-bg-success' if current_category == '공부' else 'text-bg-secondary' }}">공부</span></h4>
-          </a>
-          <a href="/posts?category=식사">
-            <h4><span class="badge {{ 'text-bg-danger' if current_category == '식사' else 'text-bg-secondary' }}">식사</span></h4>
-          </a>
-          <a href="/posts?category=참여중">
-            <h4><span class="badge {{ 'text-bg-primary' if current_category == '참여중' else 'text-bg-secondary' }}">참여중</span></h4>
-          </a>
+          {% endfor %}
         </div>
-
-        {# 카테고리별 배지 클래스 매핑 #}
-        {% set category_colors = {
-          '공부': 'text-bg-success',
-          '식사': 'text-bg-danger',
-          '참여중': 'text-bg-primary'
-        } %}
-
 
       <div id="modal-container"></div>
 
@@ -142,7 +127,7 @@
           <div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
             <div class="card-body">
               {# 매핑된 클래스를 불러오고, 없을 경우 기본값 text-bg-secondary 적용 #}
-              <h5><span class="badge {{ category_colors.get(post.category, 'text-bg-secondary')}}">{{post.category}}</span></h5>
+              <h5><span class="badge {{ categories[post.category].class }}">{{ categories[post.category].label }}</span></h5>
               <h5 class="card-title">{{post.title}}</h5>
               <hr/>
               <p class="card-date">날짜 : {{post.date}}</p>
@@ -156,28 +141,6 @@
       </div>
 
       <div id="post-detail-modal-container"></div>
-
-      <script>
-        const CATEGORY_COLORS = {
-          '전체': 'text-bg-warning',
-          '공부': 'text-bg-success',
-          '식사': 'text-bg-danger',
-          '참여중': 'text-bg-primary'
-        };
-
-        $(document).ready(function() {
-          $('#category-list .badge').on('click', onCategoryClick);
-        })
-
-        function onCategoryClick(event) {
-          // 모든 카테고리 클래스 제거
-          $('#category-list .badge').removeClass('text-bg-warning text-bg-success text-bg-danger text-bg-primary').addClass('text-bg-secondary');
-
-          // 선택 카테고리만 알맞은 색상 클래스 추가
-          const category = $(event.currentTarget).text().trim();
-          $(event.currentTarget).removeClass('text-bg-secondary').addClass(CATEGORY_COLORS[category])
-        }
-      </script>
 
 <!-- CSR(ajax 방식)
       <script>
