@@ -16,8 +16,8 @@
         
         <div class="modal-body">
           <select name="category">
-          {% for category in categories %}
-            <option value="{{category}}" {% if category == post.category %}selected{% endif %}>{{category}}</option>
+          {% for value, category in categories.items() %}
+            <option value="{{ value }}" {% if value == post.category %}selected{% endif %}>{{category.label}}</option>
           {% endfor %}
           </select>
 

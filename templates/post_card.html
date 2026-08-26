@@ -1,13 +1,6 @@
-{# 카테고리별 배지 클래스 매핑 #}
-{% set category_colors = {
-  '공부': 'text-bg-success',
-  '식사': 'text-bg-danger',
-  '참여중': 'text-bg-primary'
-} %}
-
 <div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
   <div class="card-body">
-    <h5><span class="badge {{ category_colors.get(post.category, 'text-bg-secondary')}}">{{post.category}}</span></h5>
+    <h5><span class="badge {{categories[post.category].class, 'text-bg-secondary')}}">{{categories[post.category].label}}</span></h5>
     <h5 class="card-title">{{post.title}}</h5>
     <hr/>
     <p class="card-date">날짜 : {{post.date}}</p>
