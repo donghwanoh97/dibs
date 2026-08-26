@@ -37,5 +37,48 @@
                 </div>
             </div>
         </div>
+        <!-- 로그인 AJAX 처리 스크립트 -->
+        <script>
+            function login() {
+                const userId = $('#userID').val().trim();
+                const userPassword = $('#userPassword').val().trim();
+
+                if (!userId) {
+                    alert('이메일을 입력해 주세요.');
+                    $('#userID').focus();
+
+                    return;
+                }
+
+                if (!userPassword) {
+                    alert('비밀번호를 입력해 주세요.');
+                    $('#userPassword').focus();
+
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/auth/api/login',
+                    data: {
+                        user_id: userId,
+                        password: userPassword
+                    },
+                    success: function (response) {
+                        if (response.result === 'success') {
+                            alert(response.msg);
+                            window.location.href = '/';
+                        }
+
+                        else{
+                            alert(response.msg);
+                        }
+                    },
+                    error: function () {
+                        alert('로그인 요청 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        </script>
     </body>
 </html>
