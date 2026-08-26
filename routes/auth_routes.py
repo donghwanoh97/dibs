@@ -1,7 +1,10 @@
 # routes/auth_routes.py
 
 # 날짜와 시간 정보를 다루는 파이썬 기본 도구(JWT 토큰 만료 시간 설정에 필요)
+# TODO(트러블슈팅): 회원가입 요청 중 500 내지 400번대 에러 발생 -> AJAX의 error 콜백 실행
+# Flask 2.3 이상 버전에서 발생하는 모듈 미불러옴 오류
 import datetime
+from datetime import timezone, timedelta
 import jwt
 # 임시 비밀번호 발급 기능을 위한 도구
 import string
@@ -56,7 +59,7 @@ def get_main_page():
     # user_payload가 비어있다면 = 사용자가 로그인 하지 않았다면
     # 비로그인 상태일 경우 로그인 페이지로 이동
     if not user_payload:
-        return redirect(url_for('auth.get_login_page'))
+        return redirect('/auth/login')
 
     # 로그인 상태인 경우 메인 페이지 렌더링
     return render_template('meetings.html', user_id=user_payload['user_id'])
@@ -118,7 +121,7 @@ def login():
             # 현재 시간 + 1시간
             # TODO(트러블슈팅): datetime.now() 사용 시 서버 시간과 JWT 규격(UCT) 간 시차가 발생해 발급 즉시 만료되는 현상 발생
             # 해결: datetime.timezone.utc를 명시해 만료 시간을 UTC 기준으로 일관되게 토큰 생성
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+            'exp': datetime.datetime.now(timezone.utc) + timedelta(hours=1)
         }
 
         # JWT 토큰 암호화 생성

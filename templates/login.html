@@ -59,7 +59,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/auth/login',
+                    url: '/auth/api/login',
                     data: {
                         user_id: userId,
                         password: userPassword
@@ -67,7 +67,7 @@
                     success: function (response) {
                         if (response.result === 'success') {
                             alert(response.msg);
-                            window.location.href = '/';
+                            window.location.href = "/";
                         }
 
                         else{
