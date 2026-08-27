@@ -1,11 +1,16 @@
 <div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
   <div class="card-body">
-    <h5><span class="badge {{ categories[post.category].class }}">{{categories[post.category].label}}</span></h5>
+    <div style="display: flex; gap: 4px;">
+      <h5><span class="badge {{ categories[post.category].class }}">{{categories[post.category].label}}</span></h5>
+      {% if post.is_joined %}
+      <h5><span class="badge text-bg-primary">참여 중</span></h5>
+      {% endif %}
+    </div>
     <h5 class="card-title">{{post.title}}</h5>
     <hr/>
-    <p class="card-date">날짜 : {{post.date}}</p>
-    <p class="card-time">시간 : {{post.time}}</p>
-    <p class="card-max-count">참여인원 : {{post.joined_users | length}}/{{post.max_count}}</p>
-    <p class="card-joined-users">참여자 : 김철수, 박영희</p>
+    <p class="card-date"><strong>날짜</strong> : {{post.date}}</p>
+    <p class="card-time"><strong>시간</strong> : {{post.time}}</p>
+    <p class="card-max-count"><strong>참여인원</strong> : {{post.joined_users | length}}/{{post.max_count}}</p>
+    <p class="card-joined-users"><strong>참여자</strong> : {{ post.joined_nicknames | join(', ') }}</p>
   </div>
 </div>

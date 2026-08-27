@@ -14,7 +14,8 @@
         <h2 class="modal-title">{{post.title}}</h2>
       </div>
       
-      <form hx-post="/posts" hx-target="#card-list" hx-swap="afterbegin" hx-on::after-request="document.getElementById('write-modal-backdrop').remove()">
+      <div>
+      <!-- <form hx-post="/posts" hx-target="#card-list" hx-swap="afterbegin" hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"> -->
         <div class="modal-body">
           <p><strong>날짜</strong> : {{post.date}}</p>
           <p><strong>시간</strong> : {{post.time}}</p>
@@ -28,15 +29,22 @@
           <div>
             {% if is_joined %}
               {% if user_id != author_id %}
-              <button hx-post="/posts/{{post._id}}/leave" 
-              hx-target="#post-detail-modal-container" 
-              hx-swap="innerHTML" 
-              type="button" 
-              class="btn btn-warning">참여 취소하기</button>
+              <button hx-post="/posts/{{post._id}}/leave?current_category={{ current_category }}" 
+                      hx-target="#post-card-{{post._id}}" 
+                      hx-swap="outerHTML" 
+                      hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
+                      type="button" 
+                      class="btn btn-warning">
+                참여 취소하기
+              </button>
               {% endif %}
             {% else %}
             <!-- 참여하지 않은 경우: 참여하기 버튼 -->
-            <button type="submit" class="btn btn-primary">참여하기</button>
+            <button type="button" hx-post="/posts/{{post._id}}/join?current_category={{current_category}}"
+              hx-target="#post-card-{{post._id}}"
+              hx-swap="outerHTML"
+              hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
+              class="btn btn-primary">참여하기</button>
             {% endif %}
           </div>
           {% if user_id == author_id %}
@@ -46,7 +54,8 @@
           </div>
           {% endif %}
         </div>
-      </form>
+      <!-- </form> -->
+      </div>
     </div>
   </dialog>
 </div>
