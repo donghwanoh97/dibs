@@ -56,12 +56,12 @@ def get_signup_page():
 # 3. ID 찾기 페이지 렌더링(GET)
 @auth_bp.route('/find-id', methods=['GET'])
 def get_find_id_page():
-    return render_template('find_id.html')
+    return render_template('find_ID.html')
 
 # 4. PW 찾기 페이지 렌더링(GET)
 @auth_bp.route('/find-pw', methods=['GET'])
 def get_find_pw_page():
-    return render_template('find_pw.html')
+    return render_template('find_PW.html')
 
 # 5. 로그인 처리(POST) - JWT 발급 및 쿠키 저장
 @auth_bp.route('/api/login', methods=['POST'])
