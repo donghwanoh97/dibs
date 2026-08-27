@@ -1,5 +1,4 @@
-# routes/auth_routes.py
-
+import os
 import datetime
 from datetime import timezone, timedelta
 import jwt
@@ -12,9 +11,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from database import db 
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 auth_bp = Blueprint('auth', __name__)
 
-SECRET_KEY = 'your_secret_key_here'
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 def verify_token():
     token = request.cookies.get('access_token')
