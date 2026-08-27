@@ -158,6 +158,8 @@ def get_post_detail_modal(post_id):
   is_joined = user_id in joined_user_ids
 
   current_category = request.args.get('current_category', 'all')
+  print('detail-modal')
+  print(current_category)
   return render_template('modals/post_detail.html', current_category=current_category, category=post['category'], is_joined=is_joined, user_id=user_id, author_id = author_id, post=post, author_nickname=author_nickname, joined_nicknames=joined_nicknames, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES)
 
 

@@ -1,4 +1,4 @@
-<div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
+<div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal?current_category={{current_category}}" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
   <div class="card-body">
     <div style="display: flex; gap: 4px;">
       <h5><span class="badge {{ categories[post.category].class }}">{{categories[post.category].label}}</span></h5>

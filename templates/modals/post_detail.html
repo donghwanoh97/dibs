@@ -50,7 +50,9 @@
           {% if user_id == author_id %}
           <div>
             <button hx-get="/posts/{{post._id}}/edit?current_category={{ current_category }}" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
-            <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
+            <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button"
+            hx-on::after-request="document.getElementById('write-modal-backdrop').remove()"
+            class="btn btn-danger">삭제하기</button>
           </div>
           {% endif %}
         </div>
