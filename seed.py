@@ -1,16 +1,12 @@
-from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
-
-# 1. MongoDB 연결 및 DB 선택
-client = MongoClient("mongodb://localhost:27017/")
 from database import db
 
-# 2. 공통 비밀번호 해시 생성 ("test1234!")
+# 1. 공통 비밀번호 해시 생성 ("test1234!")
 common_password_hash = generate_password_hash(
     "test1234!", method="pbkdf2:sha256"
 )
 
-# 3. 유저 더미 데이터 정의
+# 2. 유저 더미 데이터 정의
 users = [
     {
         "user_name": "오동환",
@@ -56,18 +52,17 @@ users = [
     },
 ]
 
-# 4. 기존 유저 데이터 초기화 및 신규 유저 삽입
+# 3. 기존 유저 데이터 초기화 및 신규 유저 삽입
 db.users.delete_many({})
 user_result = db.users.insert_many(users)
-print(
-    f"{len(user_result.inserted_ids)}명의 유저 더미 데이터를 성공적으로 삽입했습니다."
-)
+print(f"{len(user_result.inserted_ids)}명의 유저 더미 데이터를 성공적으로 삽입했습니다.")
 
-# 5. DB에 저장된 유저의 user_id -> ObjectId 매핑 딕셔너리 생성
+# 4. DB에 저장된 유저의 user_id -> ObjectId 매핑 딕셔너리 생성
 user_map = {user["user_id"]: user["_id"] for user in db.users.find()}
 
-# 6. 게시글 데이터 작성 (유저 ObjectId 연동)
+# 5. 게시글 데이터 작성 (유저 ObjectId 연동 + 필터링 테스트케이스 추가)
 posts = [
+    # --- 기존 데이터 ---
     {
         "title": "저녁에 햄버거 같이 드실 분",
         "date": "2026-09-01",
@@ -134,11 +129,77 @@ posts = [
         "joined_users": [user_map["aaa"], user_map["chulsoo"]],
         "created_at": "2026-08-26T05:21:43.022Z",
     },
+
+    # --- [테스트용 신규 데이터] 필터링 검증 데이터 6종 ---
+    {
+        "title": "[테스트] 이미 날짜가 지난 모임 (과거)",
+        "date": "2026-08-01",
+        "time": "12:00",
+        "joined_users": [user_map["younghee"]],
+        "max_count": 4,
+        "author": user_map["younghee"],
+        "category": "meal",
+        "content": "지난 달 모임 테스트용 데이터입니다. (is_past = True 걸러져야 함)",
+        "created_at": "2026-08-01T00:00:00.000Z",
+    },
+    {
+        "title": "[테스트] 정원 만원 마감 모임 (인원 초과)",
+        "date": "2026-09-10",
+        "time": "15:00",
+        "joined_users": [user_map["chulsoo"], user_map["younghee"]],
+        "max_count": 2,  # 2명 참여 중 / 최대 2명
+        "author": user_map["chulsoo"],
+        "category": "study",
+        "content": "정원이 다 찬 모임입니다. (is_full = True 걸러져야 함)",
+        "created_at": "2026-08-26T06:00:00.000Z",
+    },
+    {
+        "title": "[테스트] 내일 진행되는 따끈따끈한 스터디",
+        "date": "2026-08-28",
+        "time": "10:00",
+        "joined_users": [user_map["jimin"]],
+        "max_count": 3,
+        "author": user_map["jimin"],
+        "category": "study",
+        "content": "오늘 기준 내일 날짜 모임입니다. (정상 노출되어야 함)",
+        "created_at": "2026-08-27T01:00:00.000Z",
+    },
+    {
+        "title": "[테스트] 정원 1명 남은 벼락치기 파스타 모임",
+        "date": "2026-08-30",
+        "time": "13:00",
+        "joined_users": [user_map["minsu"], user_map["sujin"]],
+        "max_count": 3,  # 2명 참여 중 / 최대 3명
+        "author": user_map["minsu"],
+        "category": "meal",
+        "content": "마지막 한 자리 남아있는 식사 모임입니다.",
+        "created_at": "2026-08-27T02:00:00.000Z",
+    },
+    {
+        "title": "[테스트] 내(aaa)가 작성자인데 정원이 꽉 찬 모임",
+        "date": "2026-09-15",
+        "time": "19:00",
+        "joined_users": [user_map["aaa"], user_map["hyunwoo"]],
+        "max_count": 2,
+        "author": user_map["aaa"],
+        "category": "study",
+        "content": "내가 만든 방이지만 정원은 꽉 참. (내가 작성한 모임 예외 처리 테스트용)",
+        "created_at": "2026-08-27T03:00:00.000Z",
+    },
+    {
+        "title": "[테스트] 내(aaa)가 참여 중인데 날짜가 지난 모임",
+        "date": "2026-08-10",
+        "time": "18:00",
+        "joined_users": [user_map["aaa"], user_map["chulsoo"]],
+        "max_count": 5,
+        "author": user_map["chulsoo"],
+        "category": "meal",
+        "content": "내가 과거에 참여했던 모임. (참여 중 탭에서의 과거 모임 노출 여부 테스트용)",
+        "created_at": "2026-08-10T00:00:00.000Z",
+    },
 ]
 
-# 7. 기존 게시글 초기화 및 신규 게시글 삽입
+# 6. 기존 게시글 초기화 및 신규 게시글 삽입
 db.posts.delete_many({})
 post_result = db.posts.insert_many(posts)
-print(
-    f"{len(post_result.inserted_ids)}개의 게시글 더미 데이터를 성공적으로 삽입했습니다."
-)
+print(f"{len(post_result.inserted_ids)}개의 게시글 더미 데이터를 성공적으로 삽입했습니다.")
