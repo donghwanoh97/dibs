@@ -48,8 +48,11 @@ def get_posts():
 
   if selected_category == 'all':
     posts = list(db.posts.find({}).sort('created_at', -1))
-  elif selected_category== 'joined':
-    posts = list(db.posts.find({'author' : user['_id']}).sort('created_at', -1))
+  elif selected_category == 'joined':
+    posts = list(
+        db.posts.find({'joined_users': user['_id']})
+        .sort('created_at', -1)
+    )
   else:
     posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
 
