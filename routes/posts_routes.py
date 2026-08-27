@@ -48,10 +48,37 @@ def get_posts():
 
   if selected_category == 'all':
     posts = list(db.posts.find({}).sort('created_at', -1))
+  elif selected_category== 'joined':
+    posts = list(db.posts.find({'author' : user['_id']}).sort('created_at', -1))
   else:
     posts = list(db.posts.find({'category': selected_category}).sort('created_at', -1))
 
-  return render_template('posts.html', posts=posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES, user=user)
+  today_str = datetime.now().strftime('%Y-%m-%d')
+  filtered_posts = []
+
+  for post in posts:
+    joined_user_ids = post.get('joined_users', [])
+    max_count = int(post.get('max_count', 0))
+    post_date = post.get('date', '')  # 예: '2026-09-05'
+
+    is_full = len(joined_user_ids) >= max_count  # 정원 초과 여부
+    is_past = post_date < today_str               # 날짜 지남 여부
+
+    if is_full or is_past:
+        continue
+    joined_user_ids = post.get('joined_users', [])
+
+    post['is_joined'] = user['_id'] in joined_user_ids
+
+    # 모달 로직과 동일하게 닉네임 리스트 추출
+    joined_users_info = list(db.users.find({'_id': {'$in': joined_user_ids}}))
+    post['joined_nicknames'] = [u.get('user_nickname', 'unknown') for u in joined_users_info]
+
+    filtered_posts.append(post)
+
+
+
+  return render_template('posts.html', posts=filtered_posts, current_category=selected_category, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES, user=user)
 
 @posts_bp.route('/', methods=['POST'])
 def post_meeting():
@@ -118,7 +145,8 @@ def get_post_detail_modal(post_id):
 
   is_joined = user_id in joined_user_ids
 
-  return render_template('modals/post_detail.html', is_joined=is_joined, user_id=user_id, author_id = author_id, post=post, author_nickname=author_nickname, joined_nicknames=joined_nicknames)
+  current_category = request.args.get('current_category', 'all')
+  return render_template('modals/post_detail.html', current_category=current_category, category=post['category'], is_joined=is_joined, user_id=user_id, author_id = author_id, post=post, author_nickname=author_nickname, joined_nicknames=joined_nicknames, categories=CATEGORIES, filter_categories=FILTER_CATEGORIES)
   
 @posts_bp.route('/<post_id>', methods=['DELETE'])
 def delete_post(post_id):
@@ -128,8 +156,10 @@ def delete_post(post_id):
 @posts_bp.route('/<post_id>/edit')
 def get_edit_form(post_id):
   post = db.posts.find_one({'_id': ObjectId(post_id)})
-  curent_category = request.args.get('current_category', 'all')
-  return render_template('/modals/post_edit_form.html', post=post, categories=CATEGORIES, curent_category=curent_category)
+  current_category = request.args.get('current_category', 'all')
+  print('get')
+  print(current_category)
+  return render_template('/modals/post_edit_form.html', post=post, categories=CATEGORIES, current_category=current_category)
 
 @posts_bp.route('/<post_id>', methods=['PATCH'])
 def edit_post(post_id):
@@ -141,7 +171,8 @@ def edit_post(post_id):
   category_receive = request.form.get('category')
 
   current_category = request.args.get('current_category', 'all')
-
+  print('patch')
+  print(current_category)
   db.posts.update_one(
     {'_id': ObjectId(post_id)},
     {'$set': {

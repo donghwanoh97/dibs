@@ -2,18 +2,26 @@
   <dialog class="custom-modal post-detail" id="write-modal" open onclick="event.stopPropagation()">
     <div class="modal-content">
       <div class="modal-header">
+        <div class="modal-info">
+          <div class="modal-tags">
+            <h5><span class="badge {{ categories[category].class }}">{{ categories[category].label }}</span></h5>
+            {% if is_joined %}
+            <h5><span class="badge {{ filter_categories['joined'].class }}">{{ filter_categories['joined'].label }}</span></h5>
+            {% endif %}
+          </div>
+          <button class="modal-close-btn" type="button" onclick="document.getElementById('write-modal-backdrop').remove()">&times;</button>
+        </div>
         <h2 class="modal-title">{{post.title}}</h2>
-        <button class="modal-close-btn" type="button" onclick="document.getElementById('write-modal-backdrop').remove()">&times;</button>
       </div>
       
       <form hx-post="/posts" hx-target="#card-list" hx-swap="afterbegin" hx-on::after-request="document.getElementById('write-modal-backdrop').remove()">
         <div class="modal-body">
-          <p>날짜 : {{post.date}}</p>
-          <p>시간 : {{post.time}}</p>
-          <p>참여인원 : {{post.joined_users | length}} / {{post.max_count}}</p>
-          <p>작성자 : {{ author_nickname }}</p>
-          <p>참여자 : {{ joined_nicknames | join(', ')}}</p>
-          <p>내용 : {{post.content}}</p>
+          <p><strong>날짜</strong> : {{post.date}}</p>
+          <p><strong>시간</strong> : {{post.time}}</p>
+          <p><strong>참여인원</strong> : {{post.joined_users | length}} / {{post.max_count}}</p>
+          <p><strong>작성자</strong> : {{ author_nickname }}</p>
+          <p><strong>참여자</strong> : {{ joined_nicknames | join(', ')}}</p>
+          <p><strong>내용</strong> : {{post.content}}</p>
         </div>
 
         <div class="modal-footer">
@@ -33,7 +41,7 @@
           </div>
           {% if user_id == author_id %}
           <div>
-            <button hx-get="/posts/{{post._id}}/edit" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
+            <button hx-get="/posts/{{post._id}}/edit?current_category={{ current_category }}" hx-target="#post-detail-modal-container" hx-swap="innerHTML" type="button" class="btn btn-success">수정하기</button>
             <button hx-delete="/posts/{{post._id}}" hx-target="#post-card-{{post._id}}" hx-swap="outerHTML" hx-confirm="정말 삭제하겠습니까?" type="button" class="btn btn-danger">삭제하기</button>
           </div>
           {% endif %}

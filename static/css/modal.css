@@ -35,6 +35,19 @@ dialog.custom-modal {
   padding: 24px;
 }
 
+.modal-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 /* 모달 헤더 (제목 + 닫기 버튼) */
 .modal-header {
   display: flex;
@@ -45,11 +58,18 @@ dialog.custom-modal {
   margin-bottom: 16px;
 }
 
+.post-detail .modal-header {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
 .modal-title {
   font-size: 1.25rem;
   font-weight: bold;
   color: #333;
   margin: 0;
+  width: 100%;
 }
 
 .modal-close-btn {

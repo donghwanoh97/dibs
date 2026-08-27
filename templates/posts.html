@@ -76,7 +76,7 @@
             }
 
             .card:hover {
-              background-color: antiquewhite;
+              outline: 2px solid #05D082;
             }
 
             .logo {
@@ -87,6 +87,22 @@
               text-decoration: none;
             }
 
+            .card-tags {
+              display: flex;
+              gap: 4px;
+            }
+
+            .card-title {
+              /* 한 줄 말줄임표(...) 처리 핵심 CSS */
+              white-space: nowrap;       /* 줄바꿈 금지 */
+              overflow: hidden;          /* 넘치는 영역 숨김 */
+              text-overflow: ellipsis;   /* 넘치는 텍스트를 ... 처리 */
+              display: block;            /* 또는 display: inline-block */
+              
+              /* 기존 margin 유지 */
+              margin-top: 0.5rem;
+              margin-bottom: 0.5rem;
+            }
           </style>
   </head>
     <body>
@@ -135,13 +151,18 @@
           <div id="post-card-{{post._id}}" class="card h-100" hx-get="/posts/{{post._id}}/detail-modal" hx-target="#post-detail-modal-container" hx-swap="innerHTML">
             <div class="card-body">
               {# 매핑된 클래스를 불러오고, 없을 경우 기본값 text-bg-secondary 적용 #}
+              <div class="card-tags">
               <h5><span class="badge {{ categories[post.category].class }}">{{ categories[post.category].label }}</span></h5>
+              {% if post.is_joined %}
+              <h5><span class="badge {{ filter_categories['joined'].class }}">{{ filter_categories['joined'].label }}</span></h5>
+              {% endif %}
+              </div>
               <h5 class="card-title">{{post.title}}</h5>
               <hr/>
-              <p class="card-date">날짜 : {{post.date}}</p>
-              <p class="card-time">시간 : {{post.time}}</p>
-              <p class="card-max-count">참여인원 : {{post.joined_users | length}}/{{post.max_count}}</p>
-              <p class="card-joined-users">참여자 : 김철수, 박영희</p>
+              <p class="card-date"><strong>날짜</strong> : {{post.date}}</p>
+              <p class="card-time"><strong>시간</strong> : {{post.time}}</p>
+              <p class="card-max-count"><strong>참여인원</strong> : {{post.joined_users | length}}/{{post.max_count}}</p>
+              <p class="card-joined-users"><strong>참여자</strong> : {{ post.joined_nicknames | join(', ')}}</p>
             </div>
           </div>
           {% endfor %}

@@ -90,11 +90,11 @@ body {
 /* 버튼 스타일 */
 .btn-sub {
     height: 36px;
-    width: 70px;
-    padding: 0; /* 중앙 정렬 시 좌우 여백으로 인한 텍스트 쏠림 방지 */
+    padding: 0 10px; /* 중앙 정렬 시 좌우 여백으로 인한 텍스트 쏠림 방지 */
     background-color: #CCCCCC;
     color: #000000;
     border: none;
+    max-width: 100px;
     font-weight: bold;
     font-size: 14px;
     cursor: pointer;
