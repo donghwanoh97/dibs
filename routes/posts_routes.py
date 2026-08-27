@@ -309,7 +309,7 @@ def edit_post(post_id):
   if current_category != 'all' and updated_post['category'] != current_category:
     return "", 200
 
-  return render_template('post_card.html', post=updated_post, categories=CATEGORIES)
+  return render_template('post_card.html', post=updated_post, categories=CATEGORIES, current_category=current_category)
 
 @posts_bp.route('/update-nickname', methods=['PATCH'])
 def update_nickname():
